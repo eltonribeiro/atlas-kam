@@ -102,4 +102,18 @@ describe('SLA lifecycle persisted rules',()=>{
     const paused=await fixture();expect((await admin.from('occurrences').update({status:'awaiting_customer',paused_since:'2026-11-02T11:00:00Z',resolution_due_at:'2026-11-02T19:00:00Z'}).eq('id',paused)).error).toBeNull();
     expect((await admin.rpc('sla_tick')).error).toBeNull();expect((await read(paused)).resolution_breached).toBe(false);
   });
+  it('revised severity after reopening counts solution from active cycle, preserving first response and old cycles',async()=>{
+    const id=await fixture();expect((await admin.from('occurrences').update({status:'solution_proposed',solution_proposed_at:new Date().toISOString(),resolution_breached:true}).eq('id',id)).error).toBeNull();
+    expect((await admin.rpc('reopen_occurrence_from_customer',{p_occurrence_id:id,p_reason:'Pendência do cliente'})).error).toBeNull();
+    const before=await read(id);const old=await admin.from('occurrence_sla_cycles').select('*').eq('occurrence_id',id).eq('cycle',1).single();
+    expect((await kam.rpc('revise_occurrence_classification',{p_occurrence_id:id,p_impact:'low',p_urgency:'low',p_category_id:before.category_id,p_reason:'Impacto reduzido após reabertura'})).error).toBeNull();
+    const changed=await read(id);const expected=await admin.rpc('add_business_minutes',{p_calendar:calendar,p_start:before.resolution_started_at,p_minutes:6000});
+    expect(new Date(changed.resolution_due_at).getTime()).toBe(new Date(String(expected.data)).getTime());expect(changed.first_response_due_at).toBe(before.first_response_due_at);expect(changed.resolution_breached).toBe(true);
+    const reread=await admin.from('occurrence_sla_cycles').select('*').eq('occurrence_id',id).eq('cycle',1).single();expect(reread.data).toEqual(old.data);
+    const transitions=await kam.rpc('available_transitions',{p_occurrence_id:id});expect(transitions.error).toBeNull();expect(transitions.data).toEqual(expect.arrayContaining([expect.objectContaining({action:'change_classification',allowed:true})]));
+  });
+  it('rejects a subcategory that does not belong to the selected category',async()=>{
+    const id=await fixture();const o=await read(id);const other=await admin.from('categories').select('id').neq('id',o.category_id).limit(1).single();expect(other.error).toBeNull();
+    const invalid=await admin.from('occurrences').update({subcategory_id:other.data?.id}).eq('id',id);expect(invalid.error?.message).toContain('subcategoria deve pertencer');expect((await read(id)).subcategory_id).toBeNull();
+  });
 });
