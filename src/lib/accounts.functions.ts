@@ -127,7 +127,7 @@ export const setStaffRole = createServerFn({ method: 'POST' })
     }
     const r = await supabaseAdmin.from('user_roles').upsert({ user_id: data.userId, role: data.role }, { onConflict: 'user_id' });
     if (r.error) throw new Error('Não foi possível atualizar o perfil.');
-    await supabaseAdmin.from('config_audit').insert({ table_name: 'user_roles', record_key: `${data.userId}:${data.role}`, action: 'update', new_data: { user_id: data.userId, role: data.role }, actor_id: context.userId, note: `Perfil alterado para ${data.role}` });
+    await supabaseAdmin.from('config_audit').insert({ table_name: 'user_roles', record_key: `${data.userId}:${data.role}`, action: 'update', new_data: { user_id: data.userId, role: data.role }, actor_id: context.userId, note: `Perfil alterado para ${({ analyst: 'Analista', kam: 'KAM', ops_manager: 'Gestor de operações', admin: 'Administrador' } as const)[data.role]}` });
     return { ok: true };
   });
 

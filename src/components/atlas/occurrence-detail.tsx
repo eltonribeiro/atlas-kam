@@ -27,7 +27,7 @@ export function OccurrenceDetail({ id }: { id: string }) {
   const manager = isManager(data);
   const consumed = data.sla?.consumed_percent;
   const invalidate = async () => { await Promise.all([qc.invalidateQueries({ queryKey: ['occurrence', id] }), qc.invalidateQueries({ queryKey: ['occurrences'] })]); };
-  const kamName = data.team.find((m) => m.id === o.accounts?.kam_id)?.full_name;
+  const kamName = data.kamName ?? data.team.find((m) => m.id === o.accounts?.kam_id)?.full_name;
 
   return (
     <main className="atlas-main">
