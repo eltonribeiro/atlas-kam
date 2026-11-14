@@ -422,6 +422,102 @@ export type Database = {
           },
         ]
       }
+      email_dispatches: {
+        Row: {
+          attempts: number
+          contact_id: string | null
+          created_at: string
+          data: Json
+          id: string
+          idempotency_key: string
+          last_error: string | null
+          link_purpose: string | null
+          next_attempt_at: string
+          occurrence_id: string | null
+          problem_id: string | null
+          recipient_kind: string
+          sent_at: string | null
+          status: string
+          summary: string
+          template: string
+          user_id: string | null
+        }
+        Insert: {
+          attempts?: number
+          contact_id?: string | null
+          created_at?: string
+          data?: Json
+          id?: string
+          idempotency_key: string
+          last_error?: string | null
+          link_purpose?: string | null
+          next_attempt_at?: string
+          occurrence_id?: string | null
+          problem_id?: string | null
+          recipient_kind: string
+          sent_at?: string | null
+          status?: string
+          summary: string
+          template: string
+          user_id?: string | null
+        }
+        Update: {
+          attempts?: number
+          contact_id?: string | null
+          created_at?: string
+          data?: Json
+          id?: string
+          idempotency_key?: string
+          last_error?: string | null
+          link_purpose?: string | null
+          next_attempt_at?: string
+          occurrence_id?: string | null
+          problem_id?: string | null
+          recipient_kind?: string
+          sent_at?: string | null
+          status?: string
+          summary?: string
+          template?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_dispatches_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "account_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_dispatches_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_dispatches_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_sla"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_dispatches_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "problems"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_dispatches_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       evaluations: {
         Row: {
           answered_at: string | null
@@ -507,6 +603,74 @@ export type Database = {
             columns: ["calendar_id"]
             isOneToOne: false
             referencedRelation: "business_calendars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          dedupe_key: string
+          id: string
+          kind: string
+          occurrence_id: string | null
+          problem_id: string | null
+          read_at: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          dedupe_key: string
+          id?: string
+          kind: string
+          occurrence_id?: string | null
+          problem_id?: string | null
+          read_at?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          dedupe_key?: string
+          id?: string
+          kind?: string
+          occurrence_id?: string | null
+          problem_id?: string | null
+          read_at?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_sla"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "problems"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -985,6 +1149,68 @@ export type Database = {
         }
         Relationships: []
       }
+      public_links: {
+        Row: {
+          created_at: string
+          dispatch_id: string | null
+          evaluation_id: string | null
+          expires_at: string | null
+          id: string
+          occurrence_id: string
+          purpose: string
+          token_hash: string
+        }
+        Insert: {
+          created_at?: string
+          dispatch_id?: string | null
+          evaluation_id?: string | null
+          expires_at?: string | null
+          id?: string
+          occurrence_id: string
+          purpose: string
+          token_hash: string
+        }
+        Update: {
+          created_at?: string
+          dispatch_id?: string | null
+          evaluation_id?: string | null
+          expires_at?: string | null
+          id?: string
+          occurrence_id?: string
+          purpose?: string
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_links_dispatch_id_fkey"
+            columns: ["dispatch_id"]
+            isOneToOne: false
+            referencedRelation: "email_dispatches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_links_evaluation_id_fkey"
+            columns: ["evaluation_id"]
+            isOneToOne: false
+            referencedRelation: "evaluations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_links_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_links_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_sla"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sla_alerts: {
         Row: {
           alert_key: string
@@ -1094,6 +1320,7 @@ export type Database = {
       }
     }
     Functions: {
+      account_team: { Args: { p_account_id: string }; Returns: Json }
       add_business_minutes: {
         Args: { p_calendar: string; p_minutes: number; p_start: string }
         Returns: string
@@ -1129,6 +1356,10 @@ export type Database = {
         Args: { p_occ: string; p_problem: string }
         Returns: boolean
       }
+      claim_email_dispatches: {
+        Args: { p_limit?: number; p_occurrence_id?: string }
+        Returns: Json
+      }
       communicate_occurrence: {
         Args: {
           p_body: string
@@ -1137,9 +1368,34 @@ export type Database = {
         }
         Returns: undefined
       }
+      complete_email_dispatch: {
+        Args: {
+          p_error?: string
+          p_id: string
+          p_outcome: string
+          p_retry_after?: number
+        }
+        Returns: undefined
+      }
       current_app_role: {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
+      }
+      enqueue_customer_email: {
+        Args: {
+          p_copy_kam?: boolean
+          p_data: Json
+          p_key: string
+          p_link?: string
+          p_occurrence: string
+          p_summary: string
+          p_template: string
+        }
+        Returns: undefined
+      }
+      escalate_occurrence: {
+        Args: { p_occurrence_id: string; p_reason: string }
+        Returns: undefined
       }
       evidence_object_access: { Args: { p_name: string }; Returns: boolean }
       has_account_access: { Args: { p_account_id: string }; Returns: boolean }
@@ -1154,7 +1410,37 @@ export type Database = {
         Returns: boolean
       }
       is_config_admin: { Args: never; Returns: boolean }
+      issue_public_link: {
+        Args: { p_dispatch_id: string; p_hash: string }
+        Returns: Json
+      }
       limit_public_link: { Args: { p_key: string }; Returns: boolean }
+      mark_notifications_read: { Args: { p_ids?: string[] }; Returns: number }
+      notify_ops_managers: {
+        Args: {
+          p_body: string
+          p_email?: boolean
+          p_key: string
+          p_kind: string
+          p_occurrence: string
+          p_problem: string
+          p_title: string
+        }
+        Returns: number
+      }
+      notify_user: {
+        Args: {
+          p_body: string
+          p_email?: boolean
+          p_key: string
+          p_kind: string
+          p_occurrence: string
+          p_problem: string
+          p_title: string
+          p_user: string
+        }
+        Returns: boolean
+      }
       preview_sla: {
         Args: {
           p_account_id: string
@@ -1163,9 +1449,17 @@ export type Database = {
         }
         Returns: Json
       }
+      reassign_occurrence: {
+        Args: { p_occurrence_id: string; p_reason: string; p_user_id: string }
+        Returns: undefined
+      }
       reopen_occurrence_from_customer: {
         Args: { p_occurrence_id: string; p_reason: string }
         Returns: Json
+      }
+      resend_evaluation_invite: {
+        Args: { p_occurrence_id: string }
+        Returns: undefined
       }
       review_unfounded_contestation: {
         Args: { p_decision: string; p_id: string; p_reason: string }
@@ -1182,6 +1476,11 @@ export type Database = {
         Returns: undefined
       }
       sla_tick: { Args: never; Returns: undefined }
+      sp_datetime: { Args: { p: string }; Returns: string }
+      submit_contestation_by_link: {
+        Args: { p_body: string; p_hash: string }
+        Returns: Json
+      }
       submit_unfounded_contestation: {
         Args: { p_body: string; p_occurrence_id: string }
         Returns: string
@@ -1189,6 +1488,10 @@ export type Database = {
       transition_occurrence: {
         Args: { p_action: string; p_occurrence_id: string; p_payload?: Json }
         Returns: Json
+      }
+      user_has_account_access: {
+        Args: { p_account: string; p_user: string }
+        Returns: boolean
       }
     }
     Enums: {
