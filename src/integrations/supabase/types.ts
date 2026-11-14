@@ -1868,6 +1868,7 @@ export type Database = {
       }
       sla_tick: { Args: never; Returns: undefined }
       sp_datetime: { Args: { p: string }; Returns: string }
+      staff_names: { Args: { p_ids: string[] }; Returns: Json }
       submit_contestation_by_link: {
         Args: { p_body: string; p_hash: string }
         Returns: Json
