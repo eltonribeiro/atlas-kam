@@ -43,6 +43,13 @@
       "when": 1794649722302,
       "tag": "0005_recalculate_reopened_severity_from_cycle_start",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794649770629,
+      "tag": "0006_validate_occurrence_subcategory",
+      "breakpoints": true
     }
   ]
 }
