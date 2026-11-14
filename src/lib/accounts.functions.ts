@@ -10,9 +10,7 @@ function friendly(error: { message: string } | null, fallback: string): never {
   throw new Error(m && !/permission|row-level|JWT|PGRST|violates/i.test(m) ? m : fallback);
 }
 
-type RoleClient = { supabase: { rpc: (fn: 'current_app_role') => PromiseLike<{ data: unknown; error: unknown }> } };
-async function requireAdmin(context: RoleClient) {
-  const role = await context.supabase.rpc('current_app_role');
+function assertAdmin(role: { data: unknown; error: unknown }) {
   if (role.error || role.data !== 'admin') throw new Error('Somente o administrador pode alterar cadastros.');
 }
 
@@ -52,7 +50,7 @@ export const saveAccount = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ id: z.string().uuid().nullable(), name: z.string().trim().min(2, 'Informe o nome da conta.').max(120), kamId: z.string().uuid().nullable(), calendarId: z.string().uuid('Selecione o calendário.'), policyId: z.string().uuid('Selecione a política de SLA.'), active: z.boolean() }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     const row = { name: data.name, kam_id: data.kamId, calendar_id: data.calendarId, sla_policy_id: data.policyId, active: data.active };
     const r = data.id ? await context.supabase.from('accounts').update(row).eq('id', data.id).select('id').single() : await context.supabase.from('accounts').insert(row).select('id').single();
     if (r.error) friendly(r.error, 'Não foi possível salvar a conta.');
@@ -63,7 +61,7 @@ export const saveContact = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ id: z.string().uuid().nullable(), accountId: z.string().uuid(), name: z.string().trim().min(2, 'Informe o nome do contato.').max(120), email: z.string().trim().toLowerCase().email('Informe um e-mail válido.').max(200), jobTitle: z.string().trim().max(120), active: z.boolean() }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     const row = { account_id: data.accountId, name: data.name, email: data.email, job_title: data.jobTitle || null, active: data.active };
     const r = data.id ? await context.supabase.from('account_contacts').update(row).eq('id', data.id).select('id').single() : await context.supabase.from('account_contacts').insert(row).select('id').single();
     if (r.error) friendly(r.error, 'Não foi possível salvar o contato.');
@@ -74,7 +72,7 @@ export const anonymizeContact = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ id: z.string().uuid(), reference: z.string().trim().min(3, 'Informe a referência do pedido do titular.').max(200) }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     const r = await context.supabase.rpc('anonymize_contact', { p_contact_id: data.id, p_reference: data.reference });
     if (r.error) friendly(r.error, 'Não foi possível anonimizar o contato.');
     return { ok: true };
@@ -84,7 +82,7 @@ export const setMembership = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ accountId: z.string().uuid(), userId: z.string().uuid(), member: z.boolean() }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     if (!data.member) {
       const account = await context.supabase.from('accounts').select('kam_id').eq('id', data.accountId).single();
       if (account.data?.kam_id === data.userId) throw new Error('Troque o KAM da conta antes de remover esta alocação.');
@@ -102,7 +100,7 @@ export const inviteStaff = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ email: z.string().trim().toLowerCase().email('Informe um e-mail válido.').max(200), fullName: z.string().trim().min(3, 'Informe o nome completo.').max(120), role: roleSchema }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
     const { getRequest } = await import('@tanstack/react-start/server');
     const origin = (process.env['APP_BASE_URL']?.trim() || new URL(getRequest().url).origin).replace(/\/+$/, '');
@@ -120,7 +118,7 @@ export const setStaffRole = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ userId: z.string().uuid(), role: roleSchema }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     if (data.userId === context.userId) throw new Error('Você não pode alterar o seu próprio perfil.');
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
     if (data.role !== 'kam') {
@@ -136,7 +134,7 @@ export const setStaffActive = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ userId: z.string().uuid(), active: z.boolean() }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     if (data.userId === context.userId) throw new Error('Você não pode desativar o seu próprio acesso.');
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
     if (!data.active) {

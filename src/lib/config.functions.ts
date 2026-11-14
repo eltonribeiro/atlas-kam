@@ -15,8 +15,7 @@ function translate(message: string) {
   return message;
 }
 
-async function requireAdmin(context: { supabase: { rpc: (fn: 'current_app_role') => PromiseLike<{ data: unknown; error: unknown }> } }) {
-  const role = await context.supabase.rpc('current_app_role');
+function assertAdmin(role: { data: unknown; error: unknown }) {
   if (role.error || role.data !== 'admin') throw new Error('Somente o administrador pode alterar a configuração.');
 }
 
@@ -55,7 +54,7 @@ export const saveCalendar = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ id: z.string().uuid().nullable(), name: z.string().trim().min(2, 'Informe o nome.').max(80), timezone: z.string().trim().min(3).max(60), workStart: time, workEnd: time, workDays: z.array(z.number().int().min(1).max(7)).min(1, 'Selecione ao menos um dia útil.').max(7) }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     const row = { name: data.name, timezone: data.timezone, work_start: data.workStart, work_end: data.workEnd, work_days: [...new Set(data.workDays)].sort() };
     const r = data.id ? await context.supabase.from('business_calendars').update(row).eq('id', data.id).select('id').single() : await context.supabase.from('business_calendars').insert(row).select('id').single();
     if (r.error) friendly(r.error, 'Não foi possível salvar o calendário.');
@@ -66,7 +65,7 @@ export const addHoliday = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ calendarId: z.string().uuid(), day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Informe a data.'), description: z.string().trim().min(2, 'Descreva o feriado.').max(120) }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     const r = await context.supabase.from('holidays').insert({ calendar_id: data.calendarId, day: data.day, description: data.description });
     if (r.error) friendly(r.error, 'Não foi possível incluir o feriado.');
     return { ok: true };
@@ -76,7 +75,7 @@ export const removeHoliday = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ calendarId: z.string().uuid(), day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/) }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     const r = await context.supabase.from('holidays').delete().eq('calendar_id', data.calendarId).eq('day', data.day);
     if (r.error) friendly(r.error, 'Não foi possível remover o feriado.');
     return { ok: true };
@@ -86,7 +85,7 @@ export const createPolicy = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ name: z.string().trim().min(2, 'Informe o nome da política.').max(80), copyFrom: z.string().uuid('Selecione a política de origem.') }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     const r = await context.supabase.rpc('create_sla_policy', { p_name: data.name, p_copy_from: data.copyFrom });
     if (r.error) friendly(r.error, 'Não foi possível criar a política.');
     return { id: r.data as string };
@@ -98,7 +97,7 @@ export const savePolicy = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ id: z.string().uuid(), name: z.string().trim().min(2).max(80), targets: z.array(z.object({ severity: z.enum(['S1', 'S2', 'S3', 'S4']), firstResponse: minutes, resolution: minutes, update: minutes })).length(4) }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     for (const t of data.targets) if (t.firstResponse > t.resolution) throw new Error(`Em ${t.severity}, a 1ª resposta não pode superar o prazo de solução.`);
     const named = await context.supabase.from('sla_policies').update({ name: data.name }).eq('id', data.id);
     if (named.error) friendly(named.error, 'Não foi possível salvar a política.');
@@ -113,7 +112,7 @@ export const saveCategory = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ id: z.string().uuid().nullable(), name: z.string().trim().min(2, 'Informe o nome.').max(80), parentId: z.string().uuid().nullable(), active: z.boolean() }))
   .handler(async ({ context, data }) => {
-    await requireAdmin(context);
+    assertAdmin(await context.supabase.rpc('current_app_role'));
     const row = { name: data.name, parent_id: data.parentId, active: data.active };
     const r = data.id ? await context.supabase.from('categories').update(row).eq('id', data.id).select('id').single() : await context.supabase.from('categories').insert(row).select('id').single();
     if (r.error) friendly(r.error, 'Não foi possível salvar a categoria.');
