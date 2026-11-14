@@ -15,11 +15,12 @@ export function AuthForm({ recovery = false }: { recovery?: boolean }) {
   const [validRecovery, setValidRecovery] = useState(false);
   useEffect(() => {
     if (!recovery) return;
-    const isRecovery = new URLSearchParams(window.location.hash.slice(1)).get('type') === 'recovery';
+    const isRecovery = new URLSearchParams(window.location.hash.slice(1)).get('type') ?? '';
+    const isRecoveryLink = isRecovery === 'recovery' || isRecovery === 'invite';
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY' || (isRecovery && session)) setValidRecovery(true);
+      if (event === 'PASSWORD_RECOVERY' || (isRecoveryLink && session)) setValidRecovery(true);
     });
-    if (isRecovery) void supabase.auth.getUser().then(({ data }) => setValidRecovery(Boolean(data.user)));
+    if (isRecoveryLink) void supabase.auth.getUser().then(({ data }) => setValidRecovery(Boolean(data.user)));
     return () => data.subscription.unsubscribe();
   }, [recovery]);
   async function submit(event: FormEvent<HTMLFormElement>) {
