@@ -51,18 +51,8 @@ export const getProblem = createServerFn()
       context.supabase.rpc('current_app_role'),
     ]);
     for (const r of [details, occurrences, causes, actions, events, transitions, role]) if (r.error) throw new Error('Não foi possível carregar o problema.');
-    const team = p.data.account_id
-      ? await context.supabase.rpc('account_team', { p_account_id: p.data.account_id })
-      : await context.supabase.from('user_roles').select('user_id,role,profiles(full_name,active)').in('role', ['kam', 'ops_manager']);
-    let members: { id: string; full_name: string; role: string }[] = [];
-    if (Array.isArray(team.data)) {
-      members = (team.data as unknown[]).flatMap((m) => {
-        const row = m as { id?: string; user_id?: string; full_name?: string; role?: string; profiles?: { full_name?: string; active?: boolean } | null };
-        if (row.id && row.full_name && row.role) return [{ id: row.id, full_name: row.full_name, role: row.role }];
-        if (row.user_id && row.profiles?.active && row.profiles.full_name && row.role) return [{ id: row.user_id, full_name: row.profiles.full_name, role: row.role }];
-        return [];
-      });
-    }
+    const team = await context.supabase.rpc('problem_team', { p_problem_id: data.id });
+    const members = (Array.isArray(team.data) ? team.data : []) as { id: string; full_name: string; role: string }[];
     const authorIds = [...new Set((events.data ?? []).map((e) => e.author_id).filter((v): v is string => Boolean(v)))];
     const authors = authorIds.length ? await context.supabase.from('profiles').select('id,full_name').in('id', authorIds) : { data: [] };
     return {
