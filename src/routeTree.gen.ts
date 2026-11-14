@@ -16,12 +16,14 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedContasRouteImport } from './routes/_authenticated/contas'
 import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated/relatorios'
 import { Route as AvaliacaoTokenRouteImport } from './routes/avaliacao.$token'
+import { Route as ContestacaoTokenRouteImport } from './routes/contestacao.$token'
 import { Route as AuthenticatedConfigSlaRouteImport } from './routes/_authenticated/config.sla'
 import { Route as AuthenticatedOcorrenciasIndexRouteImport } from './routes/_authenticated/ocorrencias.index'
 import { Route as AuthenticatedOcorrenciasIdRouteImport } from './routes/_authenticated/ocorrencias.$id'
 import { Route as AuthenticatedOcorrenciasNovaRouteImport } from './routes/_authenticated/ocorrencias.nova'
 import { Route as AuthenticatedProblemasIndexRouteImport } from './routes/_authenticated/problemas.index'
 import { Route as AuthenticatedProblemasIdRouteImport } from './routes/_authenticated/problemas.$id'
+import { Route as ApiPublicJobsAtlasTickRouteImport } from './routes/api/public/jobs/atlas-tick'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
@@ -56,6 +58,11 @@ const AuthenticatedRelatoriosRoute = AuthenticatedRelatoriosRouteImport.update({
 const AvaliacaoTokenRoute = AvaliacaoTokenRouteImport.update({
   id: '/avaliacao/$token',
   path: '/avaliacao/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContestacaoTokenRoute = ContestacaoTokenRouteImport.update({
+  id: '/contestacao/$token',
+  path: '/contestacao/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedConfigSlaRoute = AuthenticatedConfigSlaRouteImport.update({
@@ -93,6 +100,11 @@ const AuthenticatedProblemasIdRoute =
     path: '/problemas/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicJobsAtlasTickRoute = ApiPublicJobsAtlasTickRouteImport.update({
+  id: '/api/public/jobs/atlas-tick',
+  path: '/api/public/jobs/atlas-tick',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
     id: '/lovable/email/transactional/preview',
@@ -107,12 +119,14 @@ export interface FileRoutesByFullPath {
   '/contas': typeof AuthenticatedContasRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/avaliacao/$token': typeof AvaliacaoTokenRoute
+  '/contestacao/$token': typeof ContestacaoTokenRoute
   '/config/sla': typeof AuthenticatedConfigSlaRoute
   '/ocorrencias/$id': typeof AuthenticatedOcorrenciasIdRoute
   '/ocorrencias/nova': typeof AuthenticatedOcorrenciasNovaRoute
   '/problemas/$id': typeof AuthenticatedProblemasIdRoute
   '/ocorrencias/': typeof AuthenticatedOcorrenciasIndexRoute
   '/problemas/': typeof AuthenticatedProblemasIndexRoute
+  '/api/public/jobs/atlas-tick': typeof ApiPublicJobsAtlasTickRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -122,12 +136,14 @@ export interface FileRoutesByTo {
   '/contas': typeof AuthenticatedContasRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/avaliacao/$token': typeof AvaliacaoTokenRoute
+  '/contestacao/$token': typeof ContestacaoTokenRoute
   '/config/sla': typeof AuthenticatedConfigSlaRoute
   '/ocorrencias/$id': typeof AuthenticatedOcorrenciasIdRoute
   '/ocorrencias/nova': typeof AuthenticatedOcorrenciasNovaRoute
   '/problemas/$id': typeof AuthenticatedProblemasIdRoute
   '/ocorrencias': typeof AuthenticatedOcorrenciasIndexRoute
   '/problemas': typeof AuthenticatedProblemasIndexRoute
+  '/api/public/jobs/atlas-tick': typeof ApiPublicJobsAtlasTickRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
@@ -139,12 +155,14 @@ export interface FileRoutesById {
   '/_authenticated/contas': typeof AuthenticatedContasRoute
   '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
   '/avaliacao/$token': typeof AvaliacaoTokenRoute
+  '/contestacao/$token': typeof ContestacaoTokenRoute
   '/_authenticated/config/sla': typeof AuthenticatedConfigSlaRoute
   '/_authenticated/ocorrencias/$id': typeof AuthenticatedOcorrenciasIdRoute
   '/_authenticated/ocorrencias/nova': typeof AuthenticatedOcorrenciasNovaRoute
   '/_authenticated/problemas/$id': typeof AuthenticatedProblemasIdRoute
   '/_authenticated/ocorrencias/': typeof AuthenticatedOcorrenciasIndexRoute
   '/_authenticated/problemas/': typeof AuthenticatedProblemasIndexRoute
+  '/api/public/jobs/atlas-tick': typeof ApiPublicJobsAtlasTickRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
@@ -156,12 +174,14 @@ export interface FileRouteTypes {
     | '/contas'
     | '/relatorios'
     | '/avaliacao/$token'
+    | '/contestacao/$token'
     | '/config/sla'
     | '/ocorrencias/$id'
     | '/ocorrencias/nova'
     | '/problemas/$id'
     | '/ocorrencias/'
     | '/problemas/'
+    | '/api/public/jobs/atlas-tick'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -171,12 +191,14 @@ export interface FileRouteTypes {
     | '/contas'
     | '/relatorios'
     | '/avaliacao/$token'
+    | '/contestacao/$token'
     | '/config/sla'
     | '/ocorrencias/$id'
     | '/ocorrencias/nova'
     | '/problemas/$id'
     | '/ocorrencias'
     | '/problemas'
+    | '/api/public/jobs/atlas-tick'
     | '/lovable/email/transactional/preview'
   id:
     | '__root__'
@@ -187,12 +209,14 @@ export interface FileRouteTypes {
     | '/_authenticated/contas'
     | '/_authenticated/relatorios'
     | '/avaliacao/$token'
+    | '/contestacao/$token'
     | '/_authenticated/config/sla'
     | '/_authenticated/ocorrencias/$id'
     | '/_authenticated/ocorrencias/nova'
     | '/_authenticated/problemas/$id'
     | '/_authenticated/ocorrencias/'
     | '/_authenticated/problemas/'
+    | '/api/public/jobs/atlas-tick'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
@@ -202,6 +226,8 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   AvaliacaoTokenRoute: typeof AvaliacaoTokenRoute
+  ContestacaoTokenRoute: typeof ContestacaoTokenRoute
+  ApiPublicJobsAtlasTickRoute: typeof ApiPublicJobsAtlasTickRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
@@ -256,6 +282,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AvaliacaoTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contestacao/$token': {
+      id: '/contestacao/$token'
+      path: '/contestacao/$token'
+      fullPath: '/contestacao/$token'
+      preLoaderRoute: typeof ContestacaoTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/config/sla': {
       id: '/_authenticated/config/sla'
       path: '/config/sla'
@@ -298,6 +331,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProblemasIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/jobs/atlas-tick': {
+      id: '/api/public/jobs/atlas-tick'
+      path: '/api/public/jobs/atlas-tick'
+      fullPath: '/api/public/jobs/atlas-tick'
+      preLoaderRoute: typeof ApiPublicJobsAtlasTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/transactional/preview': {
       id: '/lovable/email/transactional/preview'
       path: '/lovable/email/transactional/preview'
@@ -339,6 +379,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   AvaliacaoTokenRoute: AvaliacaoTokenRoute,
+  ContestacaoTokenRoute: ContestacaoTokenRoute,
+  ApiPublicJobsAtlasTickRoute: ApiPublicJobsAtlasTickRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport

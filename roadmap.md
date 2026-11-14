@@ -1,15 +1,29 @@
 # Atlas KAM — Entregas
 
-- [ ] Entrega atual — Anexos privados no detalhe e avaliação pública por token implementados. 27 testes desta entrega passaram: isolamento de arquivos, limite 10/15 MB, resposta única, CSAT/CES, expiração, reabertura e limite de acesso. Verificação ponta a ponta bloqueada: arquivos JavaScript da prévia permanecem pendentes, mesmo em navegador novo e após recuperação do servidor. Não considerar entrega pronta para produção. Pendentes: anexos no registro/ações, convite recuperável após falha de envio, lembretes/encerramento tácito e contestação pública.
+## Concluído
+- [x] Etapa 1 — Base visual, navegação e acesso por e-mail (login, saída e recuperação confirmados por Elton).
+- [x] Etapa 2 — Estrutura de dados, permissões por perfil/conta e dados fictícios.
+- [x] Etapa 3 — Motor de SLA: classificação, pausas, ciclos, violações permanentes, revisão de severidade e alertas 50/80/100.
+- [x] Etapa 4 — Registro com erros por campo, resumo, prévia de SLA, evidências privadas (10 × 15 MB) e confirmação ao cliente na fila de envio.
+- [x] Etapa 5 — Tratativa: pergunta/resposta com pausa, solução com evidências, improcedência com justificativa e evidência, 5 Porquês/Ishikawa 6M/8D, plano 5W2H, reatribuição, escalonamento, recorrência e vínculo a Problema.
+- [x] Etapa 6 — Avaliação pública (Sim/Em parte/Não, CSAT, CES, reabertura em 15 dias), contestação pública, notificações internas, modelos de e-mail, lembretes em 2 e 4 dias úteis e encerramento sem avaliação só após convite entregue.
+- [x] Etapa 7 — Painel com 8 KPIs conferidos contra cálculo manual, filtros na URL, Pareto, aging e exportação; Problemas com eficácia mensurável e reprovação automática; Contratos e SLA; Contas/equipe/anonimização; relatório por conta.
+- [x] Rotina a cada 5 minutos agendada (prazos, alertas, lembretes e envios); e-mails aguardam sem gastar tentativas enquanto o domínio não estiver liberado.
+- [x] Testes: 73 automatizados aprovados; fluxos completos verificados no navegador em desktop e 375px; dados e identidades de teste desativados após uso.
 
-- [x] Etapa 1 — Base visual, navegação e acesso por e-mail. Login, saída e recuperação confirmados pelo usuário.
-- [x] Etapa 2 — Estrutura e dados fictícios gravados: 19 tabelas com RLS (17 previstas + cargos e contador de protocolos), quatro contas, oito contatos, sete categorias e quatro usuários fictícios. Testes por perfil, impedimento de elevação, matriz de severidade, vínculo de contato e histórico imutável passaram. Usuário real preservado sem cargo/alocação automática.
-- [ ] Etapa 3 — Confirmação e revisão auditada da classificação, pausas/retomadas aos três estados anteriores, violações permanentes, histórico de SLA por ciclo e reabertura exclusiva do cliente implementados e testados. Alertas 50/80/100 e atualização atrasada idempotentes. Navegador confirmou registro → confirmação → primeira resposta → contenção → tratativa → pausa → retomada, leitura após recarregar e 375px sem rolagem horizontal. Regra definida por Elton: revisão de severidade após reabertura usa o início do ciclo ativo; primeira resposta e ciclos anteriores são preservados. A avaliação pública e envio/agendamento de alertas continuam pendentes da etapa 6; não há notificações enviadas.
-- [ ] Etapa 4 — Lista, formulário, prévia de SLA e registro com protocolo implementados; abertura S1 lida no detalhe em teste autenticado. Subcategoria dependente implementada e vínculo inválido recusado no banco. Pendente: evidências privadas, erros por campo e notificação de abertura; dependem da configuração de armazenamento e do envio da etapa 6.
-- [ ] Etapa 5 — Detalhe com transições retornadas pelo banco, causas, ações e histórico implementado. Fluxo abertura → assumir → primeira resposta → contenção → tratativa testado no navegador, desktop/375px sem sobreposição. Pendente: completar 5W2H, métodos 6M/8D, Sheets, reatribuição/escalonamento e vínculo de Problema; depende das regras restantes da etapa 3 e da etapa 7.
-- [ ] Etapa 6 — Avaliação pública e notificações não implementadas. Contestação definida: pendência para KAM/gestor, sem reabrir automaticamente; registro protegido e revisão com novo ciclo testados no banco e no navegador. Link público ainda pendente. Bloqueios críticos: domínio/endereço de resposta para e-mails e compatibilidade de KAM em cópia/retentativas. Não enviar mensagens enquanto esses contratos não estiverem definidos.
-- [ ] Etapa 7 — Painel de KPIs, Problemas e edição de configuração ainda não implementados; páginas permanecem espaços iniciais protegidos. Depende dos ciclos/avaliações e das regras concluídas nas etapas anteriores.
+## Aguardando algo externo
+- Envio real de e-mails: aguarda a verificação DNS de notify.intralog.log.br.
+- Publicação do app: a rotina agendada e os links dos e-mails usam o endereço publicado; só passam a funcionar depois de publicar.
+- Convite de novos usuários por e-mail: implementado, não testado com endereço real (envia e-mail de verdade).
+- Retenção/anonimização automática de textos livres: depende de política do Compliance (histórico é imutável).
+- Ambiente corporativo Azure/AKS: não conectado; fora do alcance desta implementação.
+- Antes de entrar em produção: Elton decide se as contas fictícias (Aurora Varejo etc.) serão desativadas — o mesmo banco atende prévia e app publicado.
 
-Elton autorizou perfil Administrador com leitura de todas as contas; cargo provisionado explicitamente, sem permissões operacionais adicionais. Endereço de resposta aprovado: elton.ribeiro@grupotpc.com. Domínio notify.intralog.log.br configurado e em verificação DNS; estrutura de e-mails gerenciados preparada com remetente Atlas KAM e endereço de resposta aprovado. Envio real bloqueado até a verificação; modelos e gatilhos de ocorrência continuam pendentes na etapa 6. Os testes de regras usam identidades fictícias isoladas. Total anterior: 46 testes automatizados aprovados; registro/tratativa/pausa/retomada confirmados no navegador. Reabertura ainda não está disponível ao cliente: somente a operação protegida e seus testes estão prontos, aguardando avaliação por token.
+## Decisões registradas
+- Cópia ao KAM: enviada como e-mail separado, sem o link pessoal do cliente (o serviço envia um destinatário por mensagem).
+- Contestação: link pessoal válido por 15 dias após o encerramento; uma contestação por análise.
+- Nova ocorrência da mesma conta e categoria durante a verificação de eficácia vincula-se ao Problema e reprova a eficácia.
+- Endereços fictícios (example.com, .test, .invalid) nunca recebem e-mail.
+- Lembretes, encerramento tácito e taxa de resposta contam a partir da entrega do convite, não da geração do link.
 
-Usuário autorizou continuar por todas as etapas, validando cada uma sem esperar aprovação intermediária; parar apenas para decisão crítica ou impedimento externo. Plano aprovado: `.lovable/plan/atlas-kam-plano-de-implementação-em-7-etapas-2026-11-14.md`.
+Elton autorizou seguir por todas as etapas sem aprovação intermediária; parar só para decisão crítica ou impedimento externo.

@@ -64,6 +64,62 @@
       "when": 1794650810278,
       "tag": "0008_private_evidence_and_customer_evaluation",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794662058423,
+      "tag": "0009_atlas_notifications_dispatch_links",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794662381991,
+      "tag": "0010_atlas_problem_lifecycle",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1794662471121,
+      "tag": "0011_atlas_dashboard_indicators",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1794662551436,
+      "tag": "0012_atlas_configuration_audit",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1794662719808,
+      "tag": "0013_atlas_problem_team",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1794663711590,
+      "tag": "0014_atlas_staff_names",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1794665102017,
+      "tag": "0015_revoke_attachment_trigger_execute",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1794665350592,
+      "tag": "0016_evaluation_invite_delivery",
+      "breakpoints": true
     }
   ]
 }
