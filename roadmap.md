@@ -1,7 +1,7 @@
 # Atlas KAM — Entregas
 
-- [ ] Etapa 1 — Base visual, navegação e acesso por e-mail implementados. Login e saída confirmados pelo usuário; e-mail de recuperação recebido e link aceito nos logs. A troca foi recusada com `same_password` (senha igual à anterior); aviso específico adicionado. Pendente: confirmar troca por uma senha diferente e entrada com a nova senha.
-- [ ] Etapa 2 — Banco, permissões e dados de teste. Depende da validação da etapa 1.
+- [x] Etapa 1 — Base visual, navegação e acesso por e-mail. Login, saída e recuperação confirmados pelo usuário.
+- [ ] Etapa 2 — Banco, permissões e dados de teste. Em implementação; cargos separados dos perfis para impedir elevação de privilégios.
 - [ ] Etapa 3 — SLA e máquina de estados. Depende da validação da etapa 2.
 - [ ] Etapa 4 — Registro de ocorrência. Depende da validação da etapa 3.
 - [ ] Etapa 5 — Tratativa, causas, ações e histórico. Depende da validação da etapa 4.
