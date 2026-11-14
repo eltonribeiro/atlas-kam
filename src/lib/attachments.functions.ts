@@ -41,7 +41,11 @@ export const uploadEvidence = createServerFn({ method: 'POST' })
     if (uploaded.error) throw new Error('Não foi possível enviar o arquivo.');
     const saved = await context.supabase.from('attachments').insert({ occurrence_id: id, action_id: actionId, storage_path: path, filename, mime_type: file.type, size_bytes: file.size, visibility, uploaded_by: context.userId });
     if (saved.error) {
-      await context.supabase.storage.from('evidences').remove([path]);
+      // Members cannot delete evidence objects (no delete policy), so the orphan from this
+      // request — a server-generated path the caller just wrote — is removed with the service role.
+      const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
+      const removed = await supabaseAdmin.storage.from('evidences').remove([path]);
+      if (removed.error) console.error('evidence orphan cleanup failed', path, removed.error.message);
       throw new Error(/limit|limite/i.test(saved.error.message) ? `Limite de ${MAX_EVIDENCE_COUNT} anexos por ocorrência.` : 'Não foi possível registrar o anexo.');
     }
     return { ok: true };
