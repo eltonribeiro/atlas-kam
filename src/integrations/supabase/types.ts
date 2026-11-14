@@ -202,6 +202,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "actions_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_sla"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "actions_owner_id_fkey"
             columns: ["owner_id"]
             isOneToOne: false
@@ -267,6 +274,13 @@ export type Database = {
             columns: ["occurrence_id"]
             isOneToOne: false
             referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attachments_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_sla"
             referencedColumns: ["id"]
           },
           {
@@ -393,6 +407,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "causes_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_sla"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "causes_problem_id_fkey"
             columns: ["problem_id"]
             isOneToOne: false
@@ -453,6 +474,13 @@ export type Database = {
             columns: ["occurrence_id"]
             isOneToOne: false
             referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evaluations_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_sla"
             referencedColumns: ["id"]
           },
         ]
@@ -533,6 +561,13 @@ export type Database = {
             columns: ["occurrence_id"]
             isOneToOne: false
             referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "occurrence_events_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_sla"
             referencedColumns: ["id"]
           },
         ]
@@ -831,6 +866,13 @@ export type Database = {
             referencedRelation: "occurrences"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "sla_alerts_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_sla"
+            referencedColumns: ["id"]
+          },
         ]
       }
       sla_policies: {
@@ -897,9 +939,30 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_occurrence_sla: {
+        Row: {
+          consumed_percent: number | null
+          first_response_due_at: string | null
+          id: string | null
+          resolution_due_at: string | null
+          sla_state: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      add_business_minutes: {
+        Args: { p_calendar: string; p_minutes: number; p_start: string }
+        Returns: string
+      }
+      available_transitions: {
+        Args: { p_occurrence_id: string }
+        Returns: Json
+      }
+      business_minutes_between: {
+        Args: { p_calendar: string; p_from: string; p_to: string }
+        Returns: number
+      }
       calculate_severity: {
         Args: {
           p_impact: Database["public"]["Enums"]["occ_level"]
@@ -910,6 +973,14 @@ export type Database = {
       can_manage_work: {
         Args: { p_occ: string; p_problem: string }
         Returns: boolean
+      }
+      communicate_occurrence: {
+        Args: {
+          p_body: string
+          p_kind: Database["public"]["Enums"]["event_kind"]
+          p_occurrence_id: string
+        }
+        Returns: undefined
       }
       current_app_role: {
         Args: never
@@ -927,6 +998,18 @@ export type Database = {
         Returns: boolean
       }
       is_config_admin: { Args: never; Returns: boolean }
+      preview_sla: {
+        Args: {
+          p_account_id: string
+          p_impact: Database["public"]["Enums"]["occ_level"]
+          p_urgency: Database["public"]["Enums"]["occ_level"]
+        }
+        Returns: Json
+      }
+      transition_occurrence: {
+        Args: { p_action: string; p_occurrence_id: string; p_payload?: Json }
+        Returns: Json
+      }
     }
     Enums: {
       action_status: "open" | "in_progress" | "done" | "cancelled"
