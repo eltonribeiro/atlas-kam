@@ -85,7 +85,7 @@ export function OccurrenceWorkflow({ data }: { data: OccurrenceDetailData }) {
 
       <Dialog open={open === 'mark_unfounded'} onOpenChange={(v) => { if (!v) setOpen(''); }}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Marcar como improcedente</DialogTitle><DialogDescription>O cliente recebe a justificativa e pode contestar em até 5 dias úteis. A contestação volta para revisão do KAM ou gestor.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>Marcar como improcedente</DialogTitle><DialogDescription>O cliente recebe a justificativa e pode contestar em até 15 dias após o encerramento. A contestação volta para revisão do KAM ou gestor.</DialogDescription></DialogHeader>
           <form id="unfounded-form" onSubmit={(e) => { e.preventDefault(); if (body.trim().length < 30) { setError('A justificativa precisa de pelo menos 30 caracteres.'); return; } if (!reviewed) { setError('Confirme que a evidência anexada sustenta a decisão.'); return; } mutation.mutate({ action: 'mark_unfounded', body: body.trim(), label: 'Marcar como improcedente' }); }}>
             <label className="field" htmlFor="unfounded-body">Justificativa ao cliente<Textarea id="unfounded-body" value={body} onChange={(e) => setBody(e.target.value)} rows={5} placeholder="Por que a ocorrência não procede, com referência à evidência." /></label>
             <p className="field-hint font-mono">{body.trim().length} / mínimo 30</p>
