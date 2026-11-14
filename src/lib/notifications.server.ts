@@ -69,9 +69,9 @@ export async function deliverDispatch(row: ClaimedDispatch, baseUrl: string, adm
   }
 }
 
-export async function processDispatches(options: { occurrenceId?: string; limit?: number; origin?: string } = {}) {
+export async function processDispatches(options: { occurrenceId?: string | undefined; limit?: number | undefined; origin?: string | undefined } = {}) {
   const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
-  const claimed = await supabaseAdmin.rpc('claim_email_dispatches', { p_occurrence_id: options.occurrenceId ?? undefined, p_limit: options.limit ?? 25 });
+  const claimed = await supabaseAdmin.rpc('claim_email_dispatches', { ...(options.occurrenceId ? { p_occurrence_id: options.occurrenceId } : {}), p_limit: options.limit ?? 25 });
   if (claimed.error) throw new Error('Não foi possível ler os envios pendentes.');
   const rows = (Array.isArray(claimed.data) ? claimed.data : []) as unknown as ClaimedDispatch[];
   const baseUrl = resolveAppBaseUrl(options.origin);
@@ -85,7 +85,7 @@ export async function processDispatches(options: { occurrenceId?: string; limit?
       outcome = { status: 'failed', error: 'falha inesperada no envio' };
     }
     totals[outcome.status] += 1;
-    const done = await supabaseAdmin.rpc('complete_email_dispatch', { p_id: row.id, p_outcome: outcome.status, p_error: outcome.error ?? undefined, p_retry_after: outcome.retryAfter ?? undefined });
+    const done = await supabaseAdmin.rpc('complete_email_dispatch', { p_id: row.id, p_outcome: outcome.status, ...(outcome.error ? { p_error: outcome.error } : {}), ...(outcome.retryAfter ? { p_retry_after: outcome.retryAfter } : {}) });
     if (done.error) console.error('Atlas e-mail dispatch result not saved', row.id, done.error.message);
   }
   return totals;

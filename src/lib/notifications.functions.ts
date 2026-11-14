@@ -17,7 +17,7 @@ export const markNotificationsRead = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ ids: z.array(z.string().uuid()).max(100).nullable() }))
   .handler(async ({ context, data }) => {
-    const r = await context.supabase.rpc('mark_notifications_read', { p_ids: data.ids ?? undefined });
+    const r = await context.supabase.rpc('mark_notifications_read', data.ids ? { p_ids: data.ids } : {});
     if (r.error) throw new Error('Não foi possível atualizar as notificações.');
     return { updated: r.data ?? 0 };
   });
