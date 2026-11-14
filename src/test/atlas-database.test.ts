@@ -4,7 +4,9 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 let admin: SupabaseClient;
 describe('Atlas persisted business rules',()=>{
  beforeAll(()=>{const url=process.env['SUPABASE_URL']; const key=process.env['SUPABASE_SERVICE_ROLE_KEY'];if(!url||!key)throw new Error('Database test configuration unavailable');admin=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});});
- it.each([['accounts',4],['account_contacts',8],['categories',7]] as const)('stores %s seed count %i',async(table,count)=>{const r=await admin.from(table).select('id',{count:'exact',head:true});expect(r.error).toBeNull();expect(r.count).toBe(count);});
+ const seedIds=(prefix:string,from:number,to:number)=>Array.from({length:to-from+1},(_,i)=>`${prefix}-0000-4000-8000-${String(from+i).padStart(12,'0')}`);
+ const seeds={accounts:seedIds('30000000',1,4),account_contacts:seedIds('40000000',3,10),categories:seedIds('50000000',1,7)};
+ it.each([['accounts',4],['account_contacts',8],['categories',7]] as const)('stores %s seed count %i',async(table,count)=>{const r=await admin.from(table).select('id',{count:'exact',head:true}).in('id',seeds[table]).eq('active',true);expect(r.error).toBeNull();expect(r.count).toBe(count);});
  it('stores S1 goals of 60 response, 480 solution and 120 update minutes',async()=>{const r=await admin.from('sla_targets').select('*').eq('severity','S1').single();expect(r.error).toBeNull();expect(r.data).toMatchObject({first_response_minutes:60,resolution_minutes:480,update_interval_minutes:120});});
  it('stores weekday 08:00–18:00 Sao Paulo calendar',async()=>{const r=await admin.from('business_calendars').select('*').single();expect(r.error).toBeNull();expect(r.data).toMatchObject({timezone:'America/Sao_Paulo',work_start:'08:00:00',work_end:'18:00:00',work_days:[1,2,3,4,5]});});
  it('has ten 2026 national holidays without carnival',async()=>{const r=await admin.from('holidays').select('day');expect(r.error).toBeNull();expect(r.data).toHaveLength(10);expect(r.data?.some(d=>d.day==='2026-11-20')).toBe(true);expect(r.data?.some(d=>d.day==='2026-02-17')).toBe(false);});
@@ -19,7 +21,7 @@ it('Friday 17:30 plus 60 business minutes is Monday 08:30',async()=>{const r=awa
    if(identity.data.user?.email!==email)throw new Error('Refusing to change non-test identity');
    const password=crypto.randomUUID()+crypto.randomUUID();const update=await admin.auth.admin.updateUserById(id,{password});expect(update.error).toBeNull();
    const client=createClient(url,pub,{auth:{persistSession:false,autoRefreshToken:false}});const login=await client.auth.signInWithPassword({email,password});expect(login.error).toBeNull();
-   const accounts=await client.from('accounts').select('id');expect(accounts.error).toBeNull();expect(accounts.data).toHaveLength(['analyst','kam'].includes(role)?1:4);
+   const accounts=await client.from('accounts').select('id');expect(accounts.error).toBeNull();if(['analyst','kam'].includes(role))expect(accounts.data).toHaveLength(1);else expect(seeds.accounts.every(seed=>accounts.data?.some(a=>a.id===seed))).toBe(true);
    const attempt=await client.from('user_roles').update({role:'admin'}).eq('user_id',id).select('role');expect(attempt.data??[]).toHaveLength(0);
    const actual=await admin.from('user_roles').select('role').eq('user_id',id).single();expect(actual.data?.role).toBe(role);
    const evaluation=await client.from('evaluations').insert({occurrence_id:'2803c8cf-8e44-4a5f-8524-2eabe115750a',token_hash:'a'.repeat(64),token_expires_at:'2026-11-30T00:00:00Z'}).select('id');expect(evaluation.data??[]).toHaveLength(0);

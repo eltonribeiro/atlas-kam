@@ -58,10 +58,15 @@ describe('Problems and evaluation reminders', () => {
       expect((await client.auth.signInWithPassword({ email, password })).error).toBeNull();
       if (role === 'kam') kam = client; else analyst = client;
     }
-    // A dedicated category keeps automatic problem matching away from other test files.
-    const cat = await admin.from('categories').insert({ name: 'Teste isolado ' + crypto.randomUUID().slice(0, 8), parent_id: null, active: true }).select('id').single();
+    // One reusable, normally inactive category keeps automatic problem matching away from other tests.
+    const name = 'Teste isolado · problemas';
+    const existing = await admin.from('categories').select('id').eq('name', name).maybeSingle();
+    const cat = existing.data ? await admin.from('categories').update({ active: true }).eq('id', existing.data.id).select('id').single() : await admin.from('categories').insert({ name, parent_id: null, active: true }).select('id').single();
     expect(cat.error).toBeNull();
     categoryId = String(cat.data?.id);
+    // Problems left in verification by an interrupted run would capture this run's occurrences.
+    const stale = await admin.from('problems').select('id').eq('category_id', categoryId).eq('status', 'effectiveness_check');
+    for (const p of stale.data ?? []) await kam.rpc('transition_problem', { p_problem_id: p.id, p_action: 'cancel', p_payload: { body: 'Cancelado por teste automatizado interrompido' } });
   }, 30000);
 
   afterAll(async () => {
