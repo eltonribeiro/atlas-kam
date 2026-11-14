@@ -44,3 +44,4 @@ use the editor.
 - Store evidence in a private bucket with account-scoped object policies; validate upload size and format server-side and enforce attachment counts under an occurrence row lock.
 - Remove an evidence object orphaned by a failed attachment insert with the service role, limited to the server-generated path of that request; members have no storage delete policy, so evidence stays undeletable from the client.
 - Run test files sequentially and keep database fixtures on reusable inactive test records (historical windows, dedicated category/account); suites share fictitious identities and the single Cloud instance also serves production.
+- Count survey reminders, tacit closure and response rate from the invitation delivery time, never from link issuance; project-wide send blocks (domain verification, e-mails disabled, missing app address) defer a dispatch without consuming its delivery attempts.
