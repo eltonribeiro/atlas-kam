@@ -185,14 +185,17 @@ function StaffTab({ data }: { data: Overview }) {
   const roleMutation = useMutation({ mutationFn: (v: { userId: string; role: 'analyst' | 'kam' | 'ops_manager' | 'admin' }) => role({ data: v }), onSuccess: async () => { toast.success('Perfil atualizado.'); await refresh(); }, onError: async (e) => { toast.error(e.message); await refresh(); } });
   const activeMutation = useMutation({ mutationFn: (v: { userId: string; active: boolean }) => active({ data: v }), onSuccess: async (_r, v) => { toast.success(v.active ? 'Acesso reativado.' : 'Acesso desativado.'); await refresh(); }, onError: (e) => toast.error(e.message) });
   const accountNames = Object.fromEntries(data.accounts.map((a) => [a.id, a.name]));
+  const [showInactive, setShowInactive] = useState(false);
+  const inactiveCount = data.staff.filter((s) => !s.active).length;
+  const people = showInactive ? data.staff : data.staff.filter((s) => s.active);
   return (
     <section className="work-section">
-      <div className="filter-row"><Button onClick={() => setInviting(true)}><UserPlus />Convidar pessoa</Button><span className="field-hint">O convite chega por e-mail com o link para definir a senha.</span></div>
+      <div className="filter-row"><Button onClick={() => setInviting(true)}><UserPlus />Convidar pessoa</Button><span className="field-hint">O convite chega por e-mail com o link para definir a senha.</span>{inactiveCount > 0 && <label className="check-field"><input type="checkbox" checked={showInactive} onChange={(e) => setShowInactive(e.target.checked)} />Mostrar acessos desativados ({inactiveCount})</label>}</div>
       <div className="table-scroll">
         <table className="atlas-table">
           <thead><tr><th>Pessoa</th><th>Perfil</th><th>Contas</th><th>Acesso</th></tr></thead>
           <tbody>
-            {data.staff.map((s) => (
+            {people.map((s) => (
               <tr key={s.id} className={s.active ? '' : 'is-inactive'}>
                 <td><strong>{s.full_name}</strong><span className="table-secondary">{s.email}</span></td>
                 <td><select aria-label={`Perfil de ${s.full_name}`} value={s.role ?? ''} disabled={s.id === data.userId || roleMutation.isPending} onChange={(e) => roleMutation.mutate({ userId: s.id, role: e.target.value as 'analyst' })}>{!s.role && <option value="">Sem perfil</option>}{Object.entries(roleLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select></td>
