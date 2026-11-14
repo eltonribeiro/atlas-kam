@@ -32,7 +32,12 @@ export function AuthForm({ recovery = false }: { recovery?: boolean }) {
         if (!validRecovery) { setError('Link de recuperação inválido ou expirado. Solicite um novo link.'); return; }
         if (password !== String(form.get('confirm'))) { setError('As senhas não coincidem.'); return; }
         const { error } = await supabase.auth.updateUser({ password });
-        if (error) { setError('Não foi possível atualizar a senha. Solicite um novo link.'); return; }
+        if (error) {
+          if (error.code === 'same_password') setError('A nova senha deve ser diferente da senha anterior. Escolha outra senha e tente novamente.');
+          else if (error.code === 'weak_password') setError('Esta senha não atende aos requisitos de segurança. Escolha uma senha mais forte e tente novamente.');
+          else setError('Não foi possível atualizar a senha. Tente novamente; se o link expirou, solicite um novo.');
+          return;
+        }
         await supabase.auth.signOut(); setNotice('Senha atualizada. Entre com sua nova senha.');
       } else if (forgot) {
         const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
