@@ -50,7 +50,7 @@ export function ProblemList() {
                       <td>{p.owner_name ?? <span className="state-badge state-risk">sem dono</span>}</td>
                       <td className="font-mono">{p.occurrence_count}</td>
                       <td className="font-mono">{p.actions_done}/{p.actions_total}</td>
-                      <td>{p.effectiveness_effective === true ? <span className="state-badge state-ok">Efetiva</span> : p.status === 'effectiveness_check' && p.effectiveness_due_date ? <span className={`state-badge ${p.effectiveness_due_date <= today ? 'state-risk' : 'state-neutral'}`}>verificar {formatDate(p.effectiveness_due_date)}</span> : '—'}</td>
+                      <td>{p.effectiveness_effective === true ? <span className="state-badge state-ok">Efetiva</span> : p.status === 'effectiveness_check' && p.effectiveness_due_date ? <span className={`state-badge ${p.effectiveness_due_date <= today ? 'state-risk' : 'state-neutral'}`}>verificar {formatDate(p.effectiveness_due_date)}</span> : p.effectiveness_effective === false ? <span className="state-badge state-breach">Não efetiva</span> : '—'}</td>
                     </tr>
                   ))}
                 </tbody>
