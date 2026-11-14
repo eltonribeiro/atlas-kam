@@ -457,6 +457,42 @@ export type Database = {
           },
         ]
       }
+      config_audit: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          id: string
+          new_data: Json | null
+          note: string | null
+          old_data: Json | null
+          record_key: string
+          table_name: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          new_data?: Json | null
+          note?: string | null
+          old_data?: Json | null
+          record_key: string
+          table_name: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          new_data?: Json | null
+          note?: string | null
+          old_data?: Json | null
+          record_key?: string
+          table_name?: string
+        }
+        Relationships: []
+      }
       email_dispatches: {
         Row: {
           attempts: number
@@ -1630,6 +1666,11 @@ export type Database = {
         Args: { p_calendar: string; p_minutes: number; p_start: string }
         Returns: string
       }
+      admin_staff: { Args: never; Returns: Json }
+      anonymize_contact: {
+        Args: { p_contact_id: string; p_reference: string }
+        Returns: undefined
+      }
       answer_customer_evaluation: {
         Args: {
           p_ces: number
@@ -1695,6 +1736,10 @@ export type Database = {
           p_occurrence_id?: string
           p_title: string
         }
+        Returns: string
+      }
+      create_sla_policy: {
+        Args: { p_copy_from: string; p_name: string }
         Returns: string
       }
       current_app_role: {

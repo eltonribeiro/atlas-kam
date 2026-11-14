@@ -85,6 +85,13 @@
       "when": 1794662471121,
       "tag": "0011_atlas_dashboard_indicators",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1794662551436,
+      "tag": "0012_atlas_configuration_audit",
+      "breakpoints": true
     }
   ]
 }
