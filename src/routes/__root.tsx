@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Navigation } from "@/components/atlas/navigation";
 import { useLocation } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -130,7 +131,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   const pathname = useLocation({ select: location => location.pathname });
-  const publicPage = pathname === '/auth' || pathname === '/reset-password' || pathname.startsWith('/avaliacao/');
+  const publicPage = pathname === '/auth' || pathname === '/reset-password' || pathname.startsWith('/avaliacao/') || pathname.startsWith('/contestacao/');
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange(event => {
       if (event !== 'SIGNED_IN' && event !== 'SIGNED_OUT' && event !== 'USER_UPDATED') return;
@@ -146,6 +147,7 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       {!publicPage && pathname !== "/" && <Navigation />}
       <Outlet />
+      <Toaster position="top-right" richColors closeButton />
     </QueryClientProvider>
   );
 }
