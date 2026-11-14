@@ -16,7 +16,7 @@ const severities = ['S1', 'S2', 'S3', 'S4'] as const;
 const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
 const timezones = ['America/Sao_Paulo', 'America/Manaus', 'America/Cuiaba', 'America/Campo_Grande', 'America/Porto_Velho', 'America/Boa_Vista', 'America/Rio_Branco', 'America/Belem', 'America/Fortaleza', 'America/Recife', 'America/Bahia', 'America/Maceio', 'America/Araguaina', 'America/Noronha'];
 const tableLabels: Record<string, string> = { business_calendars: 'Calendário', holidays: 'Feriado', sla_policies: 'Política de SLA', sla_targets: 'Meta de SLA', categories: 'Categoria', accounts: 'Conta', account_contacts: 'Contato', account_members: 'Alocação', user_roles: 'Perfil de acesso', profiles: 'Acesso' };
-const actionNames: Record<string, string> = { insert: 'inclusão', update: 'alteração', delete: 'exclusão', INSERT: 'inclusão', UPDATE: 'alteração', DELETE: 'exclusão' };
+const actionNames: Record<string, string> = { insert: 'inclusão', update: 'alteração', delete: 'exclusão', INSERT: 'inclusão', UPDATE: 'alteração', DELETE: 'exclusão', anonymize: 'anonimização', role_change: 'mudança de perfil' };
 
 function useRefresh() {
   const qc = useQueryClient();
