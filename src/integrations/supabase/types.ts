@@ -967,6 +967,24 @@ export type Database = {
         }
         Relationships: []
       }
+      public_link_attempts: {
+        Row: {
+          attempts: number
+          key: string
+          window_start: string
+        }
+        Insert: {
+          attempts?: number
+          key: string
+          window_start?: string
+        }
+        Update: {
+          attempts?: number
+          key?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       sla_alerts: {
         Row: {
           alert_key: string
@@ -1080,6 +1098,18 @@ export type Database = {
         Args: { p_calendar: string; p_minutes: number; p_start: string }
         Returns: string
       }
+      answer_customer_evaluation: {
+        Args: {
+          p_ces: number
+          p_comment: string
+          p_csat: number
+          p_hash: string
+          p_missing: string
+          p_reopen?: boolean
+          p_resolved: Database["public"]["Enums"]["eval_resolved"]
+        }
+        Returns: Json
+      }
       available_transitions: {
         Args: { p_occurrence_id: string }
         Returns: Json
@@ -1111,6 +1141,7 @@ export type Database = {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
       }
+      evidence_object_access: { Args: { p_name: string }; Returns: boolean }
       has_account_access: { Args: { p_account_id: string }; Returns: boolean }
       has_attachment_parent_access: {
         Args: { p_action: string; p_occ: string }
@@ -1123,6 +1154,7 @@ export type Database = {
         Returns: boolean
       }
       is_config_admin: { Args: never; Returns: boolean }
+      limit_public_link: { Args: { p_key: string }; Returns: boolean }
       preview_sla: {
         Args: {
           p_account_id: string
