@@ -1,4 +1,5 @@
 import { ContestationReview } from './contestation-review';
+import { Attachments } from './attachments';
 import { useServerFn } from '@tanstack/react-start';import { ClassificationReview } from './classification-review';
 import { useState } from 'react';import { Link } from '@tanstack/react-router';import { queryOptions,useSuspenseQuery,useMutation,useQueryClient } from '@tanstack/react-query';import { ArrowLeft,Check,Plus,Send } from 'lucide-react';
 import { getOccurrence,transitionOccurrence,communicateOccurrence,addAction,addCause,completeAction } from '@/lib/occurrences.functions';import { Button } from '@/components/ui/button';import { Input } from '@/components/ui/input';import { Textarea } from '@/components/ui/textarea';import { StateBadge,DateTime,actionLabels } from './occurrence-ui';
