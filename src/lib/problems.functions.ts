@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start';
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 import { z } from 'zod';
+import { staffNames } from './staff-names';
 
 function friendly(error: { message: string } | null, fallback: string): never {
   throw new Error(error?.message && !/permission|violates|row-level|JWT|PGRST/i.test(error.message) ? error.message : fallback);
@@ -53,15 +54,14 @@ export const getProblem = createServerFn()
     for (const r of [details, occurrences, causes, actions, events, transitions, role]) if (r.error) throw new Error('Não foi possível carregar o problema.');
     const team = await context.supabase.rpc('problem_team', { p_problem_id: data.id });
     const members = (Array.isArray(team.data) ? team.data : []) as { id: string; full_name: string; role: string }[];
-    const authorIds = [...new Set((events.data ?? []).map((e) => e.author_id).filter((v): v is string => Boolean(v)))];
-    const authors = authorIds.length ? await context.supabase.from('profiles').select('id,full_name').in('id', authorIds) : { data: [] };
+    const authors = await staffNames(context.supabase, [...(events.data ?? []).map((e) => e.author_id), ...(actions.data ?? []).map((a) => a.owner_id)]);
     return {
       problem: { ...p.data, ...details.data },
       occurrences: occurrences.data ?? [],
       causes: causes.data ?? [],
       actions: actions.data ?? [],
       events: events.data ?? [],
-      authors: Object.fromEntries((authors.data ?? []).map((a) => [a.id, a.full_name])),
+      authors,
       transitions: transitions.data,
       role: role.data,
       userId: context.userId,

@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start';
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 import { z } from 'zod';
+import { staffNames } from './staff-names';
 
 function friendly(error: { message: string } | null, fallback: string): never {
   const m = error?.message ?? '';
@@ -31,8 +32,7 @@ export const getAccountsOverview = createServerFn()
     for (const r of [accounts, contacts, calendars, policies]) if (r.error) throw new Error('Não foi possível carregar as contas.');
     const staff = isAdmin ? await context.supabase.rpc('admin_staff') : { data: [], error: null };
     if (staff.error) throw new Error('Não foi possível carregar a equipe.');
-    const kamIds = [...new Set((accounts.data ?? []).map((a) => a.kam_id).filter((v): v is string => Boolean(v)))];
-    const kams = kamIds.length ? await context.supabase.from('profiles').select('id,full_name').in('id', kamIds) : { data: [] };
+    const kamNames = await staffNames(context.supabase, (accounts.data ?? []).map((a) => a.kam_id));
     return {
       isAdmin,
       role: role.data,
@@ -42,7 +42,7 @@ export const getAccountsOverview = createServerFn()
       calendars: calendars.data ?? [],
       policies: policies.data ?? [],
       staff: (Array.isArray(staff.data) ? staff.data : []) as StaffMember[],
-      kamNames: Object.fromEntries((kams.data ?? []).map((k) => [k.id, k.full_name])),
+      kamNames,
     };
   });
 
@@ -127,6 +127,7 @@ export const setStaffRole = createServerFn({ method: 'POST' })
     }
     const r = await supabaseAdmin.from('user_roles').upsert({ user_id: data.userId, role: data.role }, { onConflict: 'user_id' });
     if (r.error) throw new Error('Não foi possível atualizar o perfil.');
+    await supabaseAdmin.from('config_audit').insert({ table_name: 'user_roles', record_key: `${data.userId}:${data.role}`, action: 'update', new_data: { user_id: data.userId, role: data.role }, actor_id: context.userId, note: `Perfil alterado para ${data.role}` });
     return { ok: true };
   });
 

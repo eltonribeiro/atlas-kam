@@ -2,6 +2,7 @@ import { createServerFn } from '@tanstack/react-start';
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 import { z } from 'zod';
 import { MAX_EVIDENCE_COUNT, validateEvidence } from './evidence-rules';
+import { staffNames } from './staff-names';
 
 export const getAttachments = createServerFn()
   .middleware([requireSupabaseAuth])
@@ -9,9 +10,7 @@ export const getAttachments = createServerFn()
   .handler(async ({ context, data }) => {
     const r = await context.supabase.from('attachments').select('*').eq('occurrence_id', data.id).order('created_at');
     if (r.error) throw new Error('Não foi possível carregar os anexos.');
-    const uploaderIds = [...new Set((r.data ?? []).map((a) => a.uploaded_by).filter((v): v is string => Boolean(v)))];
-    const people = uploaderIds.length ? await context.supabase.from('profiles').select('id,full_name').in('id', uploaderIds) : { data: [] };
-    const names = Object.fromEntries((people.data ?? []).map((p) => [p.id, p.full_name]));
+    const names = await staffNames(context.supabase, (r.data ?? []).map((a) => a.uploaded_by));
     return (r.data ?? []).map((a) => ({ ...a, uploader_name: a.uploaded_by ? (names[a.uploaded_by] ?? null) : null }));
   });
 

@@ -3,6 +3,7 @@ import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 import { z } from 'zod';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/integrations/supabase/types';
+import { staffNames } from './staff-names';
 import { CLOSED_STATUSES, PAGE_SIZE, occurrenceFiltersSchema, sanitizeSearch } from './occurrence-filters';
 
 const idSchema = z.object({ id: z.string().uuid() });
@@ -73,7 +74,7 @@ export const getOccurrence = createServerFn()
     if (occ.error) throw new Error('Não foi possível carregar a tratativa.');
     if (!occ.data) return null;
     const o = occ.data;
-    const [events, actions, causes, transitions, sla, team, recurrence, role, evaluation, surveyDispatch, problem, subcategory, assignee] = await Promise.all([
+    const [events, actions, causes, transitions, sla, team, recurrence, role, evaluation, surveyDispatch, problem, subcategory] = await Promise.all([
       context.supabase.from('occurrence_events').select('*').eq('occurrence_id', data.id).order('created_at', { ascending: false }).order('id', { ascending: false }),
       context.supabase.from('actions').select('*').eq('occurrence_id', data.id).order('due_date'),
       context.supabase.from('causes').select('*').eq('occurrence_id', data.id).order('created_at'),
@@ -86,17 +87,16 @@ export const getOccurrence = createServerFn()
       context.supabase.from('email_dispatches').select('status,last_error,created_at,attempts').eq('occurrence_id', data.id).eq('link_purpose', 'evaluation').order('created_at', { ascending: false }).limit(1).maybeSingle(),
       o.problem_id ? context.supabase.from('problems').select('id,code,title,status,effectiveness_criteria,effectiveness_due_date,effectiveness_effective').eq('id', o.problem_id).maybeSingle() : Promise.resolve({ data: null, error: null }),
       o.subcategory_id ? context.supabase.from('categories').select('name').eq('id', o.subcategory_id).maybeSingle() : Promise.resolve({ data: null, error: null }),
-      o.assignee_id ? context.supabase.from('profiles').select('full_name').eq('id', o.assignee_id).maybeSingle() : Promise.resolve({ data: null, error: null }),
     ]);
-    for (const r of [events, actions, causes, transitions, sla, team, recurrence, role, evaluation, surveyDispatch, problem, subcategory, assignee]) if (r.error) throw new Error('Não foi possível carregar a tratativa.');
-    const authorIds = [...new Set((events.data ?? []).map((e) => e.author_id).filter((v): v is string => Boolean(v)))];
-    const authors = authorIds.length ? await context.supabase.from('profiles').select('id,full_name').in('id', authorIds) : { data: [], error: null };
+    for (const r of [events, actions, causes, transitions, sla, team, recurrence, role, evaluation, surveyDispatch, problem, subcategory]) if (r.error) throw new Error('Não foi possível carregar a tratativa.');
+    const names = await staffNames(context.supabase, [o.assignee_id, o.accounts?.kam_id, ...(events.data ?? []).map((e) => e.author_id), ...(actions.data ?? []).map((a) => a.owner_id)]);
     return {
       occurrence: o,
       subcategoryName: subcategory.data?.name ?? null,
-      assigneeName: assignee.data?.full_name ?? null,
+      assigneeName: o.assignee_id ? (names[o.assignee_id] ?? null) : null,
+      kamName: o.accounts?.kam_id ? (names[o.accounts.kam_id] ?? null) : null,
       events: events.data ?? [],
-      authors: Object.fromEntries((authors.data ?? []).map((a) => [a.id, a.full_name])),
+      authors: names,
       actions: actions.data ?? [],
       causes: causes.data ?? [],
       transitions: transitions.data,
