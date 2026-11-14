@@ -1,10 +1,10 @@
 // @vitest-environment node
-import { beforeAll,describe,expect,it } from 'vitest';
+import { afterAll,beforeAll,describe,expect,it } from 'vitest';
 import { createClient,type SupabaseClient } from '@supabase/supabase-js';
 import { createHash,randomBytes } from 'node:crypto';
 import { writeFileSync } from 'node:fs';
 import { validateEvidence,MAX_EVIDENCE_BYTES } from '../lib/evidence-rules';
-let admin:SupabaseClient,kam:SupabaseClient,outsider:SupabaseClient;let userId:string;
+let admin:SupabaseClient,kam:SupabaseClient,outsider:SupabaseClient;let userId:string;const createdIds:string[]=[];
 const account='30000000-0000-4000-8000-000000000001';
 async function occurrence(status='solution_proposed'){
  const c=await admin.from('account_contacts').select('id').eq('account_id',account).limit(1).single();const category=await admin.from('categories').select('id').is('parent_id',null).limit(1).single();
@@ -18,8 +18,10 @@ const args=(hash:string,resolved='yes',missing='')=>({p_hash:hash,p_resolved:res
 describe('Customer evaluation and private evidence rules',()=>{
  beforeAll(async()=>{
  const url=process.env['SUPABASE_URL'];const key=process.env['SUPABASE_SERVICE_ROLE_KEY'];const pub=process.env['SUPABASE_PUBLISHABLE_KEY'];if(!url||!key||!pub)throw new Error('Test configuration unavailable');admin=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
- for(const role of ['kam','analyst']){const email=`atlas-flow-${crypto.randomUUID()}@example.test`;const password=randomBytes(32).toString('hex');const created=await admin.auth.admin.createUser({email,password,email_confirm:true});expect(created.error).toBeNull();const id=created.data.user?.id;if(!id)throw new Error('Missing test identity');expect((await admin.from('user_roles').insert({user_id:id,role})).error).toBeNull();const client=createClient(url,pub,{auth:{persistSession:false,autoRefreshToken:false}});const login=await client.auth.signInWithPassword({email,password});expect(login.error).toBeNull();if(role==='kam'){userId=id;kam=client;expect((await admin.from('account_members').insert({account_id:account,user_id:id})).error).toBeNull();writeFileSync('/tmp/atlas-flow-session.json',JSON.stringify(login.data.session),{mode:0o600});}else outsider=client;}
+ for(const role of ['kam','analyst']){const email=`atlas-flow-${crypto.randomUUID()}@example.test`;const password=randomBytes(32).toString('hex');const created=await admin.auth.admin.createUser({email,password,email_confirm:true});expect(created.error).toBeNull();const id=created.data.user?.id;if(!id)throw new Error('Missing test identity');createdIds.push(id);expect((await admin.from('user_roles').insert({user_id:id,role})).error).toBeNull();const client=createClient(url,pub,{auth:{persistSession:false,autoRefreshToken:false}});const login=await client.auth.signInWithPassword({email,password});expect(login.error).toBeNull();if(role==='kam'){userId=id;kam=client;expect((await admin.from('account_members').insert({account_id:account,user_id:id})).error).toBeNull();writeFileSync('/tmp/atlas-flow-session.json',JSON.stringify(login.data.session),{mode:0o600});}else outsider=client;}
  },30000);
+ // Identities are kept (history references them) but lose access and cannot sign in again.
+ afterAll(async()=>{for(const id of createdIds){await admin.from('account_members').delete().eq('user_id',id);await admin.from('user_roles').delete().eq('user_id',id);await admin.from('profiles').update({active:false}).eq('id',id);await admin.auth.admin.updateUserById(id,{ban_duration:'876000h'});}});
  it('accepts 15 MB but rejects larger evidence and mismatched MIME',()=>{expect(validateEvidence('evidence.pdf',MAX_EVIDENCE_BYTES,'application/pdf')).toBe('evidence.pdf');expect(()=>validateEvidence('evidence.pdf',MAX_EVIDENCE_BYTES+1,'application/pdf')).toThrow();expect(()=>validateEvidence('evidence.pdf',5,'image/png')).toThrow();});
  it('uses a private bucket',async()=>{const r=await admin.storage.getBucket('evidences');expect(r.error).toBeNull();expect(r.data?.public).toBe(false);});
  it('isolates evidence and limits each occurrence to ten files',async()=>{
