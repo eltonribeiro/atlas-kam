@@ -33,5 +33,7 @@ use the editor.
 
 - Keep TanStack Start file-based routes and Tailwind v4 CSS-first semantic tokens; this preserves the template's supported build and runtime.
 - Place internal pages under the authenticated pathless layout and keep login, password recovery and token evaluation public; business endpoints must independently verify identity and permissions.
-- Stage-one screens contain no business records or role claims; provision profiles and account permissions only in the next approved database stage.
+- Store protected roles in user_roles, never editable profiles or metadata; grant roles and account allocations only through authorized provisioning, not automatic sign-in.
 - Use shared Atlas brand, navigation, empty-section and authentication components to keep the staged pages consistent.
+- Keep occurrence transitions and business-calendar calculations in PostgreSQL RPCs; server functions authenticate each call and the UI renders available transitions without duplicating gates.
+- Use database-backed Node-environment tests for concrete business rules and isolated fictitious auth users for permission checks; never alter a real user's permissions or password for tests.
