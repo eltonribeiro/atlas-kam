@@ -611,6 +611,7 @@ export type Database = {
           csat: number | null
           cycle: number
           id: string
+          invite_sent_at: string | null
           missing_text: string | null
           occurrence_id: string
           reminders_sent: number
@@ -626,6 +627,7 @@ export type Database = {
           csat?: number | null
           cycle?: number
           id?: string
+          invite_sent_at?: string | null
           missing_text?: string | null
           occurrence_id: string
           reminders_sent?: number
@@ -641,6 +643,7 @@ export type Database = {
           csat?: number | null
           cycle?: number
           id?: string
+          invite_sent_at?: string | null
           missing_text?: string | null
           occurrence_id?: string
           reminders_sent?: number
