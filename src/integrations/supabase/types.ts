@@ -1031,6 +1031,57 @@ export type Database = {
           },
         ]
       }
+      problem_events: {
+        Row: {
+          author_id: string | null
+          body: string | null
+          created_at: string
+          from_status: Database["public"]["Enums"]["problem_status"] | null
+          id: string
+          kind: string
+          metadata: Json
+          problem_id: string
+          to_status: Database["public"]["Enums"]["problem_status"] | null
+        }
+        Insert: {
+          author_id?: string | null
+          body?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["problem_status"] | null
+          id?: string
+          kind: string
+          metadata?: Json
+          problem_id: string
+          to_status?: Database["public"]["Enums"]["problem_status"] | null
+        }
+        Update: {
+          author_id?: string | null
+          body?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["problem_status"] | null
+          id?: string
+          kind?: string
+          metadata?: Json
+          problem_id?: string
+          to_status?: Database["public"]["Enums"]["problem_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "problem_events_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "problem_events_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "problems"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       problems: {
         Row: {
           account_id: string | null
@@ -1038,9 +1089,12 @@ export type Database = {
           closed_at: string | null
           code: string
           created_at: string
+          created_by: string | null
+          effectiveness_checked_at: string | null
           effectiveness_criteria: string | null
           effectiveness_due_date: string | null
           effectiveness_effective: boolean | null
+          effectiveness_evidence: string | null
           id: string
           owner_id: string | null
           status: Database["public"]["Enums"]["problem_status"]
@@ -1052,9 +1106,12 @@ export type Database = {
           closed_at?: string | null
           code: string
           created_at?: string
+          created_by?: string | null
+          effectiveness_checked_at?: string | null
           effectiveness_criteria?: string | null
           effectiveness_due_date?: string | null
           effectiveness_effective?: boolean | null
+          effectiveness_evidence?: string | null
           id?: string
           owner_id?: string | null
           status?: Database["public"]["Enums"]["problem_status"]
@@ -1066,9 +1123,12 @@ export type Database = {
           closed_at?: string | null
           code?: string
           created_at?: string
+          created_by?: string | null
+          effectiveness_checked_at?: string | null
           effectiveness_criteria?: string | null
           effectiveness_due_date?: string | null
           effectiveness_effective?: boolean | null
+          effectiveness_evidence?: string | null
           id?: string
           owner_id?: string | null
           status?: Database["public"]["Enums"]["problem_status"]
@@ -1087,6 +1147,13 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "problems_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
@@ -1337,6 +1404,10 @@ export type Database = {
         }
         Returns: Json
       }
+      available_problem_transitions: {
+        Args: { p_problem_id: string }
+        Returns: Json
+      }
       available_transitions: {
         Args: { p_occurrence_id: string }
         Returns: Json
@@ -1352,6 +1423,7 @@ export type Database = {
         }
         Returns: Database["public"]["Enums"]["occ_severity"]
       }
+      can_manage_problem: { Args: { p_problem_id: string }; Returns: boolean }
       can_manage_work: {
         Args: { p_occ: string; p_problem: string }
         Returns: boolean
@@ -1377,6 +1449,15 @@ export type Database = {
         }
         Returns: undefined
       }
+      create_problem: {
+        Args: {
+          p_account_id: string
+          p_category_id: string
+          p_occurrence_id?: string
+          p_title: string
+        }
+        Returns: string
+      }
       current_app_role: {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
@@ -1398,6 +1479,14 @@ export type Database = {
         Returns: undefined
       }
       evidence_object_access: { Args: { p_name: string }; Returns: boolean }
+      fail_problem_effectiveness: {
+        Args: {
+          p_occurrence_id?: string
+          p_problem_id: string
+          p_reason: string
+        }
+        Returns: undefined
+      }
       has_account_access: { Args: { p_account_id: string }; Returns: boolean }
       has_attachment_parent_access: {
         Args: { p_action: string; p_occ: string }
@@ -1415,6 +1504,10 @@ export type Database = {
         Returns: Json
       }
       limit_public_link: { Args: { p_key: string }; Returns: boolean }
+      link_occurrence_to_problem: {
+        Args: { p_occurrence_id: string; p_problem_id: string }
+        Returns: undefined
+      }
       mark_notifications_read: { Args: { p_ids?: string[] }; Returns: number }
       notify_ops_managers: {
         Args: {
@@ -1440,6 +1533,10 @@ export type Database = {
           p_user: string
         }
         Returns: boolean
+      }
+      occurrence_recurrence: {
+        Args: { p_occurrence_id: string }
+        Returns: Json
       }
       preview_sla: {
         Args: {
@@ -1487,6 +1584,10 @@ export type Database = {
       }
       transition_occurrence: {
         Args: { p_action: string; p_occurrence_id: string; p_payload?: Json }
+        Returns: Json
+      }
+      transition_problem: {
+        Args: { p_action: string; p_payload?: Json; p_problem_id: string }
         Returns: Json
       }
       user_has_account_access: {
