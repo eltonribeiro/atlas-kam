@@ -10,11 +10,10 @@ export const Route = createFileRoute('/_authenticated/ocorrencias/')({
   head: () => atlasHead('Ocorrências', 'Indicadores, prazos de SLA e lista de ocorrências das contas-chave no Atlas KAM.'),
   loaderDeps: ({ search }) => search,
   loader: async ({ context, deps }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData(catalogOptions),
-      context.queryClient.ensureQueryData(occurrenceListOptions(deps)),
-      context.queryClient.prefetchQuery(dashboardOptions(deps.period, deps.account)),
-    ]);
+    // Filters re-run the loader; list and indicators load in the background so the page keeps the previous rows visible.
+    void context.queryClient.prefetchQuery(occurrenceListOptions(deps));
+    void context.queryClient.prefetchQuery(dashboardOptions(deps.period, deps.account));
+    await context.queryClient.ensureQueryData(catalogOptions);
   },
   pendingComponent: () => <main className="atlas-main"><div className="kpi-grid">{Array.from({ length: 8 }, (_, i) => <div key={i} className="kpi-card skeleton-card" />)}</div><TableSkeleton /></main>,
   errorComponent: ({ error, reset }) => <main className="atlas-main"><ErrorState error={error} retry={reset} /></main>,
