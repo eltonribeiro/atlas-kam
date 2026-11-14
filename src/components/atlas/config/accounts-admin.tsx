@@ -40,6 +40,9 @@ function AccountsTab({ data }: { data: Overview }) {
   const [editing, setEditing] = useState<Account | 'new' | null>(null);
   const [contact, setContact] = useState<{ accountId: string; contact?: Contact | undefined } | null>(null);
   const [anonymizing, setAnonymizing] = useState<Contact | null>(null);
+  const [showInactive, setShowInactive] = useState(false);
+  const inactiveCount = data.accounts.filter((a) => !a.active).length;
+  const visibleAccounts = showInactive ? data.accounts : data.accounts.filter((a) => a.active);
   const policy = Object.fromEntries(data.policies.map((p) => [p.id, p.name]));
   const calendar = Object.fromEntries(data.calendars.map((c) => [c.id, c.name]));
   const staffNames = Object.fromEntries(data.staff.map((s) => [s.id, s.full_name]));
@@ -48,9 +51,10 @@ function AccountsTab({ data }: { data: Overview }) {
   }
   return (
     <>
-      {data.isAdmin && <div className="filter-row"><Button onClick={() => setEditing('new')}><Plus />Nova conta</Button></div>}
+      {(data.isAdmin || inactiveCount > 0) && <div className="filter-row">{data.isAdmin && <Button onClick={() => setEditing('new')}><Plus />Nova conta</Button>}{inactiveCount > 0 && <label className="check-field"><input type="checkbox" checked={showInactive} onChange={(e) => setShowInactive(e.target.checked)} />Mostrar contas inativas ({inactiveCount})</label>}</div>}
+      {!visibleAccounts.length && <p className="empty-row">Todas as contas estão inativas. Marque “Mostrar contas inativas” para consultá-las.</p>}
       <div className="account-grid">
-        {data.accounts.map((a) => {
+        {visibleAccounts.map((a) => {
           const contacts = data.contacts.filter((c) => c.account_id === a.id);
           const members = data.staff.filter((s) => s.accounts.includes(a.id));
           return (
