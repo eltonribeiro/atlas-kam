@@ -123,7 +123,13 @@ export function EvaluationCard({ data, canWork }: { data: OccurrenceDetailData; 
           )}
           {d && <><dt>Último envio</dt><dd>{dispatchLabels[d.status] ?? d.status}{d.status === 'failed' && d.last_error ? ` · ${d.last_error}` : ''}</dd></>}
         </dl>
-      ) : <p className="text-muted-foreground">Preparando a pesquisa…</p>}
+      ) : (
+        <dl>
+          <dt>Envio da pesquisa</dt><dd>{d ? dispatchLabels[d.status] ?? d.status : 'na fila de envio'}</dd>
+          {d?.status === 'failed' && <><dt>Motivo</dt><dd>{d.last_error ?? 'falha no envio'}</dd></>}
+          {d && ['skipped', 'suppressed', 'failed'].includes(d.status) && <dd className="field-hint">Sem envio, o link de avaliação não é gerado e a ocorrência não encerra sozinha. Corrija o contato ou reenvie a pesquisa.</dd>}
+        </dl>
+      )}
       {canResend && <Button variant="outline" size="sm" disabled={mutation.isPending} onClick={() => mutation.mutate()}><RefreshCw />{mutation.isPending ? 'Reenviando…' : 'Reenviar pesquisa'}</Button>}
     </section>
   );
