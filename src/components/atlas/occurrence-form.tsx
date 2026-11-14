@@ -41,10 +41,11 @@ export function OccurrenceForm() {
   const [formError, setFormError] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [dirty, setDirty] = useState(false);
-  const [done, setDone] = useState(false);
+  const doneRef = useRef(false);
   const summaryRef = useRef<HTMLDivElement>(null);
 
-  useBlocker({ shouldBlockFn: () => dirty && !done && !window.confirm('Descartar o rascunho desta ocorrência?'), enableBeforeUnload: () => dirty && !done });
+  // The ref is read at navigation time, so the redirect after saving is never blocked by a stale render.
+  useBlocker({ shouldBlockFn: () => dirty && !doneRef.current && !window.confirm('Descartar o rascunho desta ocorrência?'), enableBeforeUnload: () => dirty && !doneRef.current });
 
   const preview = useQuery({ queryKey: ['sla-preview', account, impact, urgency], enabled: Boolean(account), queryFn: () => sla({ data: { accountId: account, impact, urgency } }) });
   const target = jsonRecord(preview.data);
@@ -52,6 +53,7 @@ export function OccurrenceForm() {
   const mutation = useMutation({
     mutationFn: async (payload: Parameters<typeof register>[0]) => {
       const created = await register(payload);
+      doneRef.current = true;
       const failed: string[] = [];
       for (const file of files) {
         const f = new FormData();
@@ -63,14 +65,13 @@ export function OccurrenceForm() {
       return { ...created, failed };
     },
     onSuccess: async (r) => {
-      setDone(true);
       await qc.invalidateQueries({ queryKey: ['occurrences'] });
       await qc.invalidateQueries({ queryKey: ['dashboard'] });
       toast.success(`Ocorrência ${r.protocol} registrada.`, { description: 'O cliente receberá a confirmação com o protocolo e o prazo de 1ª resposta.' });
       if (r.failed.length) toast.warning('Alguns arquivos não foram anexados', { description: `${r.failed.join('; ')}. Anexe novamente no detalhe da ocorrência.` });
       await navigate({ to: '/ocorrencias/$id', params: { id: r.id } });
     },
-    onError: (e) => setFormError(e.message),
+    onError: (e) => { doneRef.current = false; setFormError(e.message); },
   });
 
   useEffect(() => { if (Object.keys(errors).length) summaryRef.current?.focus(); }, [errors]);
