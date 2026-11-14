@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { atlasHead } from '@/lib/atlas-head';
-import { Section } from '@/components/atlas/section';
-export const Route = createFileRoute('/_authenticated/ocorrencias/$id')({ head: () => atlasHead('Detalhe da ocorrência', 'Tratativa e acompanhamento no Atlas KAM.'), component: () => <Section title="Detalhe da ocorrência" eyebrow="Tratativa e acompanhamento" detail={true} /> });
+import { OccurrenceDetail,detailOptions } from '@/components/atlas/occurrence-detail';
+export const Route=createFileRoute('/_authenticated/ocorrencias/$id')({head:()=>atlasHead('Tratativa da ocorrência','Análise, ações e histórico da ocorrência Atlas KAM.'),loader:({context,params})=>context.queryClient.ensureQueryData(detailOptions(params.id)),component:Detail});
+function Detail(){const {id}=Route.useParams();return <OccurrenceDetail id={id}/>;}

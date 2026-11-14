@@ -1,11 +1,13 @@
 # Atlas KAM — Entregas
 
-- [ ] Etapa 1 — Base visual, navegação e acesso por e-mail implementados. Login e saída confirmados pelo usuário; e-mail de recuperação recebido e link aceito nos logs. A troca foi recusada com `same_password` (senha igual à anterior); aviso específico adicionado. Pendente: confirmar troca por uma senha diferente e entrada com a nova senha.
-- [ ] Etapa 2 — Banco, permissões e dados de teste. Depende da validação da etapa 1.
-- [ ] Etapa 3 — SLA e máquina de estados. Depende da validação da etapa 2.
-- [ ] Etapa 4 — Registro de ocorrência. Depende da validação da etapa 3.
-- [ ] Etapa 5 — Tratativa, causas, ações e histórico. Depende da validação da etapa 4.
-- [ ] Etapa 6 — Avaliação pública e notificações. Depende da validação da etapa 5 e das definições de contestação e envio de e-mails do plano.
-- [ ] Etapa 7 — Painel, Problemas e configuração. Depende da validação da etapa 6.
+- [x] Etapa 1 — Base visual, navegação e acesso por e-mail. Login, saída e recuperação confirmados pelo usuário.
+- [x] Etapa 2 — Estrutura e dados fictícios gravados: 19 tabelas com RLS (17 previstas + cargos e contador de protocolos), quatro contas, oito contatos, sete categorias e quatro usuários fictícios. Testes por perfil, impedimento de elevação, matriz de severidade, vínculo de contato e histórico imutável passaram. Usuário real preservado sem cargo/alocação automática.
+- [ ] Etapa 3 — Motor de horas úteis e transições internas implementados; testes de sexta-feira e feriado passaram. Pendente: confirmação de severidade/categoria antes da tratativa, alteração auditada de severidade, testes completos de pausa/reabertura, criação de ciclos de avaliação e agendamento de alertas. Bloqueios: modelo de contestação e envio de e-mails ainda requer decisões da etapa 6.
+- [ ] Etapa 4 — Lista, formulário, prévia de SLA e registro com protocolo implementados; abertura S1 lida no detalhe em teste autenticado. Pendente: evidências privadas, subcategoria, erros por campo e notificação de abertura; dependem da configuração de armazenamento e do envio da etapa 6.
+- [ ] Etapa 5 — Detalhe com transições retornadas pelo banco, causas, ações e histórico implementado. Fluxo abertura → assumir → primeira resposta → contenção → tratativa testado no navegador, desktop/375px sem sobreposição. Pendente: completar 5W2H, métodos 6M/8D, Sheets, reatribuição/escalonamento e vínculo de Problema; depende das regras restantes da etapa 3 e da etapa 7.
+- [ ] Etapa 6 — Avaliação pública e notificações não implementadas. Bloqueios críticos: definir contestação de improcedência, domínio/endereço de resposta para e-mails e compatibilidade de KAM em cópia/retentativas. Não enviar mensagens enquanto esses contratos não estiverem definidos.
+- [ ] Etapa 7 — Painel de KPIs, Problemas e edição de configuração ainda não implementados; páginas permanecem espaços iniciais protegidos. Depende dos ciclos/avaliações e das regras concluídas nas etapas anteriores.
 
-Executar somente uma etapa por entrega e validar antes de avançar. Plano aprovado: `.lovable/plan/atlas-kam-plano-de-implementação-em-7-etapas-2026-11-14.md`.
+Decisão crítica para uso real: definir o perfil de Elton e as contas que ele pode acessar. Não atribuir admin/KAM nem liberar contas automaticamente; o teste foi realizado com KAM fictício isolado. Total atual: 34 testes automatizados passaram, além do fluxo autenticado de registro/tratativa no navegador.
+
+Usuário autorizou continuar por todas as etapas, validando cada uma sem esperar aprovação intermediária; parar apenas para decisão crítica ou impedimento externo. Plano aprovado: `.lovable/plan/atlas-kam-plano-de-implementação-em-7-etapas-2026-11-14.md`.

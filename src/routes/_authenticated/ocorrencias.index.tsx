@@ -1,4 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { atlasHead } from '@/lib/atlas-head';
-import { Section } from '@/components/atlas/section';
-export const Route = createFileRoute('/_authenticated/ocorrencias/')({ head: () => atlasHead('Ocorrências', 'Gestão de reclamações · base ISO 10002 no Atlas KAM.'), component: () => <Section title="Ocorrências" eyebrow="Gestão de reclamações · base ISO 10002" detail={false} /> });
+import { OccurrenceList,occurrencesOptions } from '@/components/atlas/occurrence-list';
+export const Route=createFileRoute('/_authenticated/ocorrencias/')({head:()=>atlasHead('Ocorrências','Gestão de reclamações e prazos do Atlas KAM.'),loader:({context})=>context.queryClient.ensureQueryData(occurrencesOptions),component:OccurrenceList});

@@ -1,0 +1,7 @@
+import { Button } from '@/components/ui/button';
+export const statusLabels:Record<string,string>={registered:'Registrada',in_analysis:'Em análise',in_treatment:'Em tratativa',awaiting_customer:'Aguardando cliente',solution_proposed:'Solução proposta',reopened:'Reaberta',closed_resolved:'Encerrada · resolvida',closed_no_evaluation:'Encerrada · sem avaliação',closed_unfounded:'Encerrada · improcedente'};
+export const actionLabels:Record<string,string>={containment:'Contenção',correction:'Correção',corrective:'Corretiva',preventive:'Preventiva'};
+export function DateTime({value}:{value?:string|null}){return <span className="font-mono">{value?new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',dateStyle:'short',timeStyle:'short'}).format(new Date(value)):'—'}</span>;}
+export function StateBadge({status}:{status:string}){return <span className={`state-badge ${status==='reopened'?'state-breach':status==='awaiting_customer'?'state-pause':'state-neutral'}`}>{statusLabels[status]??status}</span>;}
+export function ErrorState({error,retry}:{error:unknown;retry?:()=>void}){return <div className="data-message" role="alert"><p>{error instanceof Error?error.message:'Não foi possível carregar os dados.'}</p>{retry&&<Button variant="outline" onClick={retry}>Tentar novamente</Button>}</div>;}
+export function LoadingState(){return <div className="data-message" role="status">Carregando…</div>;}
