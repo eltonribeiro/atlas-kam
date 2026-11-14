@@ -79,7 +79,7 @@ export function SlaBadge({ state, due, pausedSince }: { state?: string | null | 
   return <span className="state-badge state-ok">No prazo · vence {formatShortDateTime(due)}</span>;
 }
 export function FirstResponseBadge({ at, due, breached, minutes, closed }: { at?: string | null | undefined; due?: string | null | undefined; breached?: boolean | null | undefined; minutes?: number | null | undefined; closed?: boolean | undefined }) {
-  if (at) return <span className={`state-badge ${breached ? 'state-breach' : 'state-ok'}`}>{breached ? 'Fora do prazo' : 'No prazo'} · {formatMinutes(minutes)}</span>;
+  if (at) return <span className={`state-badge ${breached ? 'state-breach' : 'state-ok'}`}>{breached ? 'Fora do prazo' : 'No prazo'}{minutes === null || minutes === undefined ? '' : ` · ${formatMinutes(minutes)}`}</span>;
   if (closed) return <span className="state-badge state-pause">Sem resposta registrada</span>;
   if (due && Date.now() > Date.parse(due)) return <span className="state-badge state-breach">Violado há {formatElapsed(due)}</span>;
   return <span className="state-badge state-neutral">Vence {formatShortDateTime(due)}</span>;
