@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useServerFn } from '@tanstack/react-start';
-import { useSuspenseQuery, queryOptions } from '@tanstack/react-query';
-import { getOccurrenceCatalog, reviseClassification } from '@/lib/occurrences.functions';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { catalogOptions } from '@/lib/occurrence-queries';
+import { reviseClassification } from '@/lib/occurrences.functions';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -9,7 +10,7 @@ export function ClassificationReview({ id, impact, urgency, categoryId, onSaved,
   id: string; impact: 'high'|'medium'|'low'; urgency: 'high'|'medium'|'low'; categoryId: string;
   onSaved: () => Promise<void>; onCancel: () => void;
 }) {
-  const { data } = useSuspenseQuery(queryOptions({queryKey:['occurrence-catalog'],queryFn:()=>getOccurrenceCatalog()}));
+  const { data } = useSuspenseQuery(catalogOptions);
   const revise = useServerFn(reviseClassification);
   const [busy,setBusy] = useState(false);
   const [error,setError] = useState('');
