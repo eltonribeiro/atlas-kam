@@ -11,7 +11,7 @@ let accountId = '';
 const at = (local: string) => new Date(`${local}-03:00`).toISOString();
 
 async function occurrence(contactId: string, categoryId: string, createdAt: string, firstResponseAt: string | null, breached: boolean) {
-  const r = await admin.from('occurrences').insert({ account_id: accountId, contact_id: contactId, category_id: categoryId, channel: 'email', type: 'complaint', subject: 'Teste isolado KPI ' + crypto.randomUUID().slice(0, 6), description: 'Cenário fictício', customer_expectation: 'Resolver o cenário fictício', impact: 'low', urgency: 'low', severity: 'S4', protocol: 'pending', first_response_due_at: createdAt, resolution_due_at: createdAt, resolution_started_at: createdAt }).select('id').single();
+  const r = await admin.from('occurrences').insert({ account_id: accountId, contact_id: contactId, category_id: categoryId, channel: 'email', type: 'complaint', subject: 'Teste isolado KPI ' + crypto.randomUUID().slice(0, 6), description: 'Cenário fictício', customer_expectation: 'Resolver o cenário fictício', impact: 'low', urgency: 'low', severity: 'S4', created_by: '2be3a113-5b62-4a0e-9995-7b24aa44a878', protocol: 'pending', first_response_due_at: createdAt, resolution_due_at: createdAt, resolution_started_at: createdAt }).select('id').single();
   expect(r.error).toBeNull();
   const id = String(r.data?.id);
   const u = await admin.from('occurrences').update({ created_at: createdAt, first_response_at: firstResponseAt, first_response_breached: breached }).eq('id', id);
