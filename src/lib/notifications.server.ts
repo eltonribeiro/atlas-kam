@@ -18,7 +18,7 @@ export type ClaimedDispatch = {
   name: string | null;
 };
 
-export type DispatchOutcome = { status: 'sent' | 'suppressed' | 'skipped' | 'failed'; error?: string | undefined; retryAfter?: number | undefined };
+export type DispatchOutcome = { status: 'sent' | 'suppressed' | 'skipped' | 'failed' | 'deferred'; error?: string | undefined; retryAfter?: number | undefined };
 
 const RESERVED_DOMAIN = /(^|\.)(example\.(com|net|org)|example|test|invalid|localhost)$/i;
 
@@ -38,8 +38,8 @@ type Admin = Awaited<typeof import('@/integrations/supabase/client.server')>['su
 export function describeSendError(error: unknown): DispatchOutcome {
   if (error instanceof EmailAPIError) {
     if (error.status === 429) return { status: 'failed', error: 'limite de envio atingido', retryAfter: error.retryAfterSeconds ?? 60 };
-    if (error.code === 'domain_not_verified') return { status: 'failed', error: 'domínio de envio ainda em verificação' };
-    if (error.code === 'emails_disabled') return { status: 'failed', error: 'envio de e-mails desativado no projeto' };
+    if (error.code === 'domain_not_verified') return { status: 'deferred', error: 'domínio de envio ainda em verificação' };
+    if (error.code === 'emails_disabled') return { status: 'deferred', error: 'envio de e-mails desativado no projeto' };
     return { status: 'failed', error: `serviço de e-mail recusou o envio (${error.code ?? error.status})` };
   }
   return { status: 'failed', error: 'falha temporária no serviço de e-mail' };
@@ -49,7 +49,7 @@ export async function deliverDispatch(row: ClaimedDispatch, baseUrl: string, adm
   if (!TEMPLATES[row.template]) return { status: 'skipped', error: 'modelo de e-mail indisponível' };
   if (!row.email) return { status: 'skipped', error: 'destinatário inativo ou sem e-mail cadastrado' };
   if (isReservedTestAddress(row.email)) return { status: 'skipped', error: 'endereço fictício reservado para testes' };
-  if (!baseUrl) return { status: 'failed', error: 'endereço do aplicativo não configurado' };
+  if (!baseUrl) return { status: 'deferred', error: 'endereço do aplicativo não configurado' };
   const templateData: Record<string, unknown> = { ...row.data };
   if (typeof row.data['path'] === 'string') templateData['appUrl'] = baseUrl + row.data['path'];
   if (row.link_purpose) {
@@ -75,7 +75,7 @@ export async function processDispatches(options: { occurrenceId?: string | undef
   if (claimed.error) throw new Error('Não foi possível ler os envios pendentes.');
   const rows = (Array.isArray(claimed.data) ? claimed.data : []) as unknown as ClaimedDispatch[];
   const baseUrl = resolveAppBaseUrl(options.origin);
-  const totals = { sent: 0, suppressed: 0, skipped: 0, failed: 0 };
+  const totals = { sent: 0, suppressed: 0, skipped: 0, failed: 0, deferred: 0 };
   for (const row of rows) {
     let outcome: DispatchOutcome;
     try {

@@ -108,7 +108,7 @@ export function EvaluationCard({ data, canWork }: { data: OccurrenceDetailData; 
       {e ? (
         <dl>
           <dt>Ciclo</dt><dd className="font-mono">{e.cycle}</dd>
-          <dt>Enviada em</dt><dd className="font-mono">{formatDateTime(e.sent_at)}</dd>
+          <dt>Enviada em</dt><dd className="font-mono">{e.invite_sent_at ? formatDateTime(e.invite_sent_at) : 'aguardando envio do convite'}</dd>
           {e.answered_at ? (
             <>
               <dt>Respondida em</dt><dd className="font-mono">{formatDateTime(e.answered_at)}</dd>
@@ -121,12 +121,13 @@ export function EvaluationCard({ data, canWork }: { data: OccurrenceDetailData; 
               <dt>Link válido até</dt><dd className="font-mono">{formatDateTime(e.token_expires_at)}</dd>
             </>
           )}
-          {d && <><dt>Último envio</dt><dd>{dispatchLabels[d.status] ?? d.status}{d.status === 'failed' && d.last_error ? ` · ${d.last_error}` : ''}</dd></>}
+          {d && <><dt>Último envio</dt><dd>{dispatchLabels[d.status] ?? d.status}{(d.status === 'failed' || d.status === 'retry') && d.last_error ? ` · ${d.last_error}` : ''}</dd></>}
+          {!e.answered_at && !e.invite_sent_at && <dd className="field-hint">Lembretes e encerramento sem avaliação só começam a contar depois que o convite for entregue ao cliente.</dd>}
         </dl>
       ) : (
         <dl>
           <dt>Envio da pesquisa</dt><dd>{d ? dispatchLabels[d.status] ?? d.status : 'na fila de envio'}</dd>
-          {d?.status === 'failed' && <><dt>Motivo</dt><dd>{d.last_error ?? 'falha no envio'}</dd></>}
+          {(d?.status === 'failed' || d?.status === 'retry') && <><dt>Motivo</dt><dd>{d.last_error ?? 'falha no envio'}</dd></>}
           {d && ['skipped', 'suppressed', 'failed'].includes(d.status) && <dd className="field-hint">Sem envio, o link de avaliação não é gerado e a ocorrência não encerra sozinha. Corrija o contato ou reenvie a pesquisa.</dd>}
         </dl>
       )}

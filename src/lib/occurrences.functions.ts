@@ -83,7 +83,7 @@ export const getOccurrence = createServerFn()
       context.supabase.rpc('account_team', { p_account_id: o.account_id }),
       context.supabase.rpc('occurrence_recurrence', { p_occurrence_id: data.id }),
       context.supabase.rpc('current_app_role'),
-      context.supabase.from('evaluations').select('id,cycle,sent_at,answered_at,resolved,csat,ces,reminders_sent,token_expires_at').eq('occurrence_id', data.id).order('cycle', { ascending: false }).limit(1).maybeSingle(),
+      context.supabase.from('evaluations').select('id,cycle,sent_at,invite_sent_at,answered_at,resolved,csat,ces,reminders_sent,token_expires_at').eq('occurrence_id', data.id).order('cycle', { ascending: false }).limit(1).maybeSingle(),
       context.supabase.from('email_dispatches').select('status,last_error,created_at,attempts').eq('occurrence_id', data.id).eq('link_purpose', 'evaluation').order('created_at', { ascending: false }).limit(1).maybeSingle(),
       o.problem_id ? context.supabase.from('problems').select('id,code,title,status,effectiveness_criteria,effectiveness_due_date,effectiveness_effective').eq('id', o.problem_id).maybeSingle() : Promise.resolve({ data: null, error: null }),
       o.subcategory_id ? context.supabase.from('categories').select('name').eq('id', o.subcategory_id).maybeSingle() : Promise.resolve({ data: null, error: null }),
