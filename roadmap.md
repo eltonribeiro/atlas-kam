@@ -1,6 +1,6 @@
 # Atlas KAM — Entregas
 
-- [ ] Etapa 1 — Base visual, navegação e acesso por e-mail. Lovable Cloud autorizado e ativo; páginas criadas, verificação de acesso em andamento.
+- [ ] Etapa 1 — Base visual, navegação e acesso por e-mail implementados. Testes de páginas públicas, bloqueio sem sessão, erro de credenciais e apresentação em 375px/desktop passaram. Bloqueio de validação final: ainda não existe usuário de autenticação; criar uma conta em More → Users → Add user e entrar na prévia para testar entrada válida, saída e recuperação por e-mail.
 - [ ] Etapa 2 — Banco, permissões e dados de teste. Depende da validação da etapa 1.
 - [ ] Etapa 3 — SLA e máquina de estados. Depende da validação da etapa 2.
 - [ ] Etapa 4 — Registro de ocorrência. Depende da validação da etapa 3.
