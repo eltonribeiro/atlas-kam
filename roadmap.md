@@ -1,5 +1,7 @@
 # Atlas KAM — Entregas
 
+- [ ] Entrega atual — Implementar e testar anexos privados e avaliação pública por token, incluindo isolamento de acesso e respostas do cliente.
+
 - [x] Etapa 1 — Base visual, navegação e acesso por e-mail. Login, saída e recuperação confirmados pelo usuário.
 - [x] Etapa 2 — Estrutura e dados fictícios gravados: 19 tabelas com RLS (17 previstas + cargos e contador de protocolos), quatro contas, oito contatos, sete categorias e quatro usuários fictícios. Testes por perfil, impedimento de elevação, matriz de severidade, vínculo de contato e histórico imutável passaram. Usuário real preservado sem cargo/alocação automática.
 - [ ] Etapa 3 — Confirmação e revisão auditada da classificação, pausas/retomadas aos três estados anteriores, violações permanentes, histórico de SLA por ciclo e reabertura exclusiva do cliente implementados e testados. Alertas 50/80/100 e atualização atrasada idempotentes. Navegador confirmou registro → confirmação → primeira resposta → contenção → tratativa → pausa → retomada, leitura após recarregar e 375px sem rolagem horizontal. Regra definida por Elton: revisão de severidade após reabertura usa o início do ciclo ativo; primeira resposta e ciclos anteriores são preservados. A avaliação pública e envio/agendamento de alertas continuam pendentes da etapa 6; não há notificações enviadas.
