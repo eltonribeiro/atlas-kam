@@ -80,6 +80,12 @@ describe('SLA lifecycle persisted rules',()=>{
     const id=await fixture();expect((await admin.from('occurrences').update({status:'closed_resolved',closed_at:new Date(Date.now()-16*86400000).toISOString()}).eq('id',id)).error).toBeNull();
     expect((await admin.rpc('reopen_occurrence_from_customer',{p_occurrence_id:id,p_reason:'Fora do prazo'})).error).not.toBeNull();expect((await read(id)).status).toBe('closed_resolved');
   });
+  it('never accepts preconfirmed classification or assigned owner on registration',async()=>{
+    const id=await fixture();const source=await read(id);
+    const r=await kam.from('occurrences').insert({account_id:source.account_id,contact_id:source.contact_id,category_id:source.category_id,channel:'email',type:'incident',subject:'Teste de confirmação indevida',description:'Fixture isolada',customer_expectation:'Validar proteção',impact:'high',urgency:'high',severity:'S1',protocol:'pending',created_by:kamId,first_response_due_at:source.first_response_due_at,resolution_due_at:source.resolution_due_at,resolution_started_at:source.resolution_started_at,classification_confirmed_at:new Date().toISOString(),classification_confirmed_by:kamId,assignee_id:kamId}).select('id').single();
+    expect(r.error).toBeNull();if(!r.data)throw new Error('Missing fixture');
+    const saved=await read(r.data.id);expect(saved.classification_confirmed_at).toBeNull();expect(saved.classification_confirmed_by).toBeNull();expect(saved.assignee_id).toBeNull();
+  });
   it('allows only KAM/manager to revise severity with reason, recalculating from opening',async()=>{
     const id=await fixture();const o=await read(id);const args={p_occurrence_id:id,p_impact:'low',p_urgency:'low',p_category_id:o.category_id,p_reason:'Revisão justificada do impacto'};
     expect((await analyst.rpc('revise_occurrence_classification',args)).error).not.toBeNull();
