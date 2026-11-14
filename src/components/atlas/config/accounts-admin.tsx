@@ -199,7 +199,7 @@ function StaffTab({ data }: { data: Overview }) {
               <tr key={s.id} className={s.active ? '' : 'is-inactive'}>
                 <td><strong>{s.full_name}</strong><span className="table-secondary">{s.email}</span></td>
                 <td><select aria-label={`Perfil de ${s.full_name}`} value={s.role ?? ''} disabled={s.id === data.userId || roleMutation.isPending} onChange={(e) => roleMutation.mutate({ userId: s.id, role: e.target.value as 'analyst' })}>{!s.role && <option value="">Sem perfil</option>}{Object.entries(roleLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select></td>
-                <td>{s.accounts.map((a) => accountNames[a]).filter(Boolean).join(', ') || <span className="text-muted-foreground">nenhuma</span>}</td>
+                <td>{s.role === 'admin' ? <span className="text-muted-foreground">todas · somente leitura</span> : s.accounts.map((a) => accountNames[a]).filter(Boolean).join(', ') || <span className="text-muted-foreground">nenhuma</span>}</td>
                 <td>{s.id === data.userId ? <span className="text-muted-foreground">você</span> : <Button size="sm" variant={s.active ? 'ghost' : 'outline'} disabled={activeMutation.isPending} onClick={() => { if (!s.active || window.confirm(`Desativar o acesso de ${s.full_name}?`)) activeMutation.mutate({ userId: s.id, active: !s.active }); }}>{s.active ? 'Desativar' : 'Reativar'}</Button>}</td>
               </tr>
             ))}
