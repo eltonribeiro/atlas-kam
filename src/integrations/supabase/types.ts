@@ -511,6 +511,61 @@ export type Database = {
           },
         ]
       }
+      occurrence_contestations: {
+        Row: {
+          body: string
+          created_at: string
+          decision: string | null
+          id: string
+          occurrence_id: string
+          reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          decision?: string | null
+          id?: string
+          occurrence_id: string
+          reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          decision?: string | null
+          id?: string
+          occurrence_id?: string
+          reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "occurrence_contestations_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "occurrence_contestations_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_sla"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "occurrence_contestations_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       occurrence_events: {
         Row: {
           author_id: string | null
@@ -1080,6 +1135,10 @@ export type Database = {
         Args: { p_occurrence_id: string; p_reason: string }
         Returns: Json
       }
+      review_unfounded_contestation: {
+        Args: { p_decision: string; p_id: string; p_reason: string }
+        Returns: undefined
+      }
       revise_occurrence_classification: {
         Args: {
           p_category_id: string
@@ -1091,6 +1150,10 @@ export type Database = {
         Returns: undefined
       }
       sla_tick: { Args: never; Returns: undefined }
+      submit_unfounded_contestation: {
+        Args: { p_body: string; p_occurrence_id: string }
+        Returns: string
+      }
       transition_occurrence: {
         Args: { p_action: string; p_occurrence_id: string; p_payload?: Json }
         Returns: Json
