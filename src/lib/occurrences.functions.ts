@@ -1,6 +1,8 @@
 import { createServerFn } from '@tanstack/react-start';
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 import { z } from 'zod';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '@/integrations/supabase/types';
 import { CLOSED_STATUSES, PAGE_SIZE, occurrenceFiltersSchema, sanitizeSearch } from './occurrence-filters';
 
 const idSchema = z.object({ id: z.string().uuid() });
@@ -23,18 +25,21 @@ export const getOccurrenceCatalog = createServerFn()
     return { accounts: accounts.data ?? [], contacts: contacts.data ?? [], categories: categories.data ?? [], role: role.data, userId: context.userId };
   });
 
-function applyFilters<T extends { not: Function; in: Function; eq: Function; lte: Function; ilike: Function }>(query: T, filters: z.infer<typeof occurrenceFiltersSchema>): T {
-  let q = query;
+type AppClient = SupabaseClient<Database>;
+
+function filteredOccurrences(supabase: AppClient, filters: z.infer<typeof occurrenceFiltersSchema>, withCount: boolean) {
+  let q = supabase.from('v_occurrence_list').select('*', withCount ? { count: 'exact' } : undefined);
   const status = filters.status ?? 'open';
-  if (status === 'open') q = q.not('status', 'in', `(${CLOSED_STATUSES.join(',')})`);
+  const closed = `(${CLOSED_STATUSES.join(',')})`;
+  if (status === 'open') q = q.not('status', 'in', closed);
   if (status === 'closed') q = q.in('status', [...CLOSED_STATUSES]);
   if (filters.account) q = q.eq('account_id', filters.account);
   if (filters.severity) q = q.eq('severity', filters.severity);
   if (filters.category) q = q.eq('category_id', filters.category);
-  if (filters.risk) q = q.lte('sort_rank', 1).not('status', 'in', `(${CLOSED_STATUSES.join(',')})`);
+  if (filters.risk) q = q.lte('sort_rank', 1).not('status', 'in', closed);
   const search = sanitizeSearch(filters.q);
   if (search) q = q.ilike('search_text', `%${search}%`);
-  return q;
+  return q.order('sort_rank').order('resolution_due_at').order('protocol');
 }
 
 export const listOccurrences = createServerFn()
@@ -42,11 +47,7 @@ export const listOccurrences = createServerFn()
   .inputValidator(occurrenceFiltersSchema)
   .handler(async ({ context, data }) => {
     const page = data.page ?? 1;
-    const query = applyFilters(context.supabase.from('v_occurrence_list').select('*', { count: 'exact' }), data)
-      .order('sort_rank')
-      .order('resolution_due_at')
-      .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
-    const r = await query;
+    const r = await filteredOccurrences(context.supabase, data, true).range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
     if (r.error) throw new Error('Não foi possível carregar as ocorrências.');
     return { rows: r.data ?? [], total: r.count ?? 0, page, pageSize: PAGE_SIZE };
   });
@@ -55,7 +56,7 @@ export const exportOccurrences = createServerFn()
   .middleware([requireSupabaseAuth])
   .inputValidator(occurrenceFiltersSchema)
   .handler(async ({ context, data }) => {
-    const r = await applyFilters(context.supabase.from('v_occurrence_list').select('*'), data).order('sort_rank').order('resolution_due_at').limit(5000);
+    const r = await filteredOccurrences(context.supabase, data, false).limit(5000);
     if (r.error) throw new Error('Não foi possível exportar as ocorrências.');
     return r.data ?? [];
   });
