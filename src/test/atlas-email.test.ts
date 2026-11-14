@@ -20,19 +20,19 @@ describe('Atlas email configuration', () => {
   afterEach(() => vi.unstubAllEnvs())
   it('uses the chosen sender domain', async () => {
     await sendTemplateEmail('fixture', 'fixture@example.test', { idempotencyKey: 'fixture-1' })
-    expect(send.mock.calls[0][0].sender_domain).toBe('notify.intralog.log.br')
+    expect(send.mock.calls[0]?.[0]?.sender_domain).toBe('notify.intralog.log.br')
   })
   it('defaults replies to the address approved by Elton', async () => {
     await sendTemplateEmail('fixture', 'fixture@example.test')
-    expect(send.mock.calls[0][0].reply_to).toBe('elton.ribeiro@grupotpc.com')
+    expect(send.mock.calls[0]?.[0]?.reply_to).toBe('elton.ribeiro@grupotpc.com')
   })
   it('keeps event deduplication keys', async () => {
     await sendTemplateEmail('fixture', 'fixture@example.test', { idempotencyKey: 'occurrence-event-1' })
-    expect(send.mock.calls[0][0].idempotency_key).toBe('occurrence-event-1')
+    expect(send.mock.calls[0]?.[0]?.idempotency_key).toBe('occurrence-event-1')
   })
   it('does not retry a suppressed recipient', async () => {
     const { EmailAPIError } = await import('@lovable.dev/email-js')
-    send.mockRejectedValue(new EmailAPIError('Suppressed', { code: 'recipient_suppressed', status: 422 }))
+    send.mockRejectedValue(new EmailAPIError(422, 'Suppressed', null, 'recipient_suppressed'))
     expect(await sendTemplateEmail('fixture', 'fixture@example.test')).toEqual({ sent: false, reason: 'recipient_suppressed' })
     expect(send).toHaveBeenCalledTimes(1)
   })
