@@ -1839,6 +1839,7 @@ export type Database = {
         }
         Returns: Json
       }
+      problem_team: { Args: { p_problem_id: string }; Returns: Json }
       reassign_occurrence: {
         Args: { p_occurrence_id: string; p_reason: string; p_user_id: string }
         Returns: undefined
