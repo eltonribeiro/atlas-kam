@@ -205,6 +205,13 @@ export type Database = {
             foreignKeyName: "actions_occurrence_id_fkey"
             columns: ["occurrence_id"]
             isOneToOne: false
+            referencedRelation: "v_occurrence_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
             referencedRelation: "v_occurrence_sla"
             referencedColumns: ["id"]
           },
@@ -220,6 +227,13 @@ export type Database = {
             columns: ["problem_id"]
             isOneToOne: false
             referencedRelation: "problems"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "v_problem_list"
             referencedColumns: ["id"]
           },
         ]
@@ -274,6 +288,13 @@ export type Database = {
             columns: ["occurrence_id"]
             isOneToOne: false
             referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attachments_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_list"
             referencedColumns: ["id"]
           },
           {
@@ -410,6 +431,13 @@ export type Database = {
             foreignKeyName: "causes_occurrence_id_fkey"
             columns: ["occurrence_id"]
             isOneToOne: false
+            referencedRelation: "v_occurrence_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "causes_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
             referencedRelation: "v_occurrence_sla"
             referencedColumns: ["id"]
           },
@@ -418,6 +446,13 @@ export type Database = {
             columns: ["problem_id"]
             isOneToOne: false
             referencedRelation: "problems"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "causes_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "v_problem_list"
             referencedColumns: ["id"]
           },
         ]
@@ -499,6 +534,13 @@ export type Database = {
             foreignKeyName: "email_dispatches_occurrence_id_fkey"
             columns: ["occurrence_id"]
             isOneToOne: false
+            referencedRelation: "v_occurrence_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_dispatches_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
             referencedRelation: "v_occurrence_sla"
             referencedColumns: ["id"]
           },
@@ -507,6 +549,13 @@ export type Database = {
             columns: ["problem_id"]
             isOneToOne: false
             referencedRelation: "problems"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_dispatches_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "v_problem_list"
             referencedColumns: ["id"]
           },
           {
@@ -570,6 +619,13 @@ export type Database = {
             columns: ["occurrence_id"]
             isOneToOne: false
             referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evaluations_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_list"
             referencedColumns: ["id"]
           },
           {
@@ -656,6 +712,13 @@ export type Database = {
             foreignKeyName: "notifications_occurrence_id_fkey"
             columns: ["occurrence_id"]
             isOneToOne: false
+            referencedRelation: "v_occurrence_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
             referencedRelation: "v_occurrence_sla"
             referencedColumns: ["id"]
           },
@@ -664,6 +727,13 @@ export type Database = {
             columns: ["problem_id"]
             isOneToOne: false
             referencedRelation: "problems"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "v_problem_list"
             referencedColumns: ["id"]
           },
           {
@@ -712,6 +782,13 @@ export type Database = {
             columns: ["occurrence_id"]
             isOneToOne: false
             referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "occurrence_contestations_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_list"
             referencedColumns: ["id"]
           },
           {
@@ -786,6 +863,13 @@ export type Database = {
             foreignKeyName: "occurrence_events_occurrence_id_fkey"
             columns: ["occurrence_id"]
             isOneToOne: false
+            referencedRelation: "v_occurrence_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "occurrence_events_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
             referencedRelation: "v_occurrence_sla"
             referencedColumns: ["id"]
           },
@@ -834,6 +918,13 @@ export type Database = {
             columns: ["occurrence_id"]
             isOneToOne: false
             referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "occurrence_sla_cycles_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_list"
             referencedColumns: ["id"]
           },
           {
@@ -1023,6 +1114,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "occurrences_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "v_problem_list"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "occurrences_subcategory_id_fkey"
             columns: ["subcategory_id"]
             isOneToOne: false
@@ -1078,6 +1176,13 @@ export type Database = {
             columns: ["problem_id"]
             isOneToOne: false
             referencedRelation: "problems"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "problem_events_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "v_problem_list"
             referencedColumns: ["id"]
           },
         ]
@@ -1273,6 +1378,13 @@ export type Database = {
             foreignKeyName: "public_links_occurrence_id_fkey"
             columns: ["occurrence_id"]
             isOneToOne: false
+            referencedRelation: "v_occurrence_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_links_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
             referencedRelation: "v_occurrence_sla"
             referencedColumns: ["id"]
           },
@@ -1300,6 +1412,13 @@ export type Database = {
             columns: ["occurrence_id"]
             isOneToOne: false
             referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sla_alerts_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_list"
             referencedColumns: ["id"]
           },
           {
@@ -1375,6 +1494,81 @@ export type Database = {
       }
     }
     Views: {
+      v_occurrence_list: {
+        Row: {
+          account_id: string | null
+          account_name: string | null
+          assignee_id: string | null
+          assignee_name: string | null
+          category_id: string | null
+          category_name: string | null
+          consumed_percent: number | null
+          created_at: string | null
+          evaluation_answered_at: string | null
+          evaluation_ces: number | null
+          evaluation_csat: number | null
+          evaluation_resolved:
+            | Database["public"]["Enums"]["eval_resolved"]
+            | null
+          evaluation_sent: boolean | null
+          first_response_at: string | null
+          first_response_breached: boolean | null
+          first_response_due_at: string | null
+          first_response_minutes: number | null
+          first_response_overdue: boolean | null
+          id: string | null
+          paused_since: string | null
+          problem_id: string | null
+          protocol: string | null
+          reopen_count: number | null
+          resolution_breached: boolean | null
+          resolution_due_at: string | null
+          search_text: string | null
+          severity: Database["public"]["Enums"]["occ_severity"] | null
+          sla_state: string | null
+          sort_rank: number | null
+          status: Database["public"]["Enums"]["occ_status"] | null
+          subject: string | null
+          type: Database["public"]["Enums"]["occ_type"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "occurrences_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "occurrences_assignee_id_fkey"
+            columns: ["assignee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "occurrences_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "occurrences_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "problems"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "occurrences_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "v_problem_list"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_occurrence_sla: {
         Row: {
           consumed_percent: number | null
@@ -1384,6 +1578,50 @@ export type Database = {
           sla_state: string | null
         }
         Relationships: []
+      }
+      v_problem_list: {
+        Row: {
+          account_id: string | null
+          account_name: string | null
+          actions_done: number | null
+          actions_total: number | null
+          category_id: string | null
+          category_name: string | null
+          closed_at: string | null
+          code: string | null
+          created_at: string | null
+          effectiveness_due_date: string | null
+          effectiveness_effective: boolean | null
+          id: string | null
+          occurrence_count: number | null
+          owner_id: string | null
+          owner_name: string | null
+          status: Database["public"]["Enums"]["problem_status"] | null
+          title: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "problems_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "problems_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "problems_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {
@@ -1412,6 +1650,7 @@ export type Database = {
         Args: { p_occurrence_id: string }
         Returns: Json
       }
+      backlog_aging: { Args: { p_account_id?: string }; Returns: Json }
       business_minutes_between: {
         Args: { p_calendar: string; p_from: string; p_to: string }
         Returns: number
@@ -1462,6 +1701,10 @@ export type Database = {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
       }
+      dashboard_kpis: {
+        Args: { p_account_id?: string; p_from: string; p_to: string }
+        Returns: Json
+      }
       enqueue_customer_email: {
         Args: {
           p_copy_kam?: boolean
@@ -1503,6 +1746,10 @@ export type Database = {
         Args: { p_dispatch_id: string; p_hash: string }
         Returns: Json
       }
+      kpi_window: {
+        Args: { p_account?: string; p_from: string; p_to: string }
+        Returns: Json
+      }
       limit_public_link: { Args: { p_key: string }; Returns: boolean }
       link_occurrence_to_problem: {
         Args: { p_occurrence_id: string; p_problem_id: string }
@@ -1534,6 +1781,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      occurrence_pareto: { Args: { p_account_id?: string }; Returns: Json }
       occurrence_recurrence: {
         Args: { p_occurrence_id: string }
         Returns: Json
