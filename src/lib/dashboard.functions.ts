@@ -32,3 +32,19 @@ export const getDashboard = createServerFn()
       aging: aging.data as { d0_2: number; d3_5: number; d6_10: number; d10_plus: number; total: number },
     };
   });
+
+export const getAccountReport = createServerFn()
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), accountId: z.string().uuid() }))
+  .handler(async ({ context, data }) => {
+    const start = new Date(`${data.from}T00:00:00-03:00`).toISOString();
+    const end = new Date(new Date(`${data.to}T00:00:00-03:00`).getTime() + 86400000).toISOString();
+    const [account, occurrences, problems] = await Promise.all([
+      context.supabase.from('accounts').select('id,name').eq('id', data.accountId).maybeSingle(),
+      context.supabase.from('v_occurrence_list').select('*').eq('account_id', data.accountId).gte('created_at', start).lt('created_at', end).order('created_at', { ascending: false }).limit(1000),
+      context.supabase.from('v_problem_list').select('*').eq('account_id', data.accountId).order('created_at', { ascending: false }).limit(100),
+    ]);
+    if (account.error || occurrences.error || problems.error) throw new Error('Não foi possível montar o relatório.');
+    if (!account.data) throw new Error('Conta sem acesso ou inexistente.');
+    return { account: account.data, occurrences: occurrences.data ?? [], problems: problems.data ?? [] };
+  });
