@@ -116,4 +116,14 @@ describe('SLA lifecycle persisted rules',()=>{
     const id=await fixture();const o=await read(id);const other=await admin.from('categories').select('id').neq('id',o.category_id).limit(1).single();expect(other.error).toBeNull();
     const invalid=await admin.from('occurrences').update({subcategory_id:other.data?.id}).eq('id',id);expect(invalid.error?.message).toContain('subcategoria deve pertencer');expect((await read(id)).subcategory_id).toBeNull();
   });
+  it('customer contestation waits for KAM review without restarting SLA',async()=>{
+    const id=await fixture();expect((await admin.from('occurrences').update({status:'closed_unfounded',closed_at:new Date().toISOString()}).eq('id',id)).error).toBeNull();const before=await read(id);
+    expect((await kam.rpc('submit_unfounded_contestation',{p_occurrence_id:id,p_body:'Cliente discorda'})).error).not.toBeNull();
+    const submitted=await admin.rpc('submit_unfounded_contestation',{p_occurrence_id:id,p_body:'Cliente discorda da conclusão'});expect(submitted.error).toBeNull();
+    const waiting=await read(id);expect(waiting.status).toBe('closed_unfounded');expect(waiting.reopen_count).toBe(0);expect(waiting.resolution_started_at).toBe(before.resolution_started_at);expect(waiting.resolution_due_at).toBe(before.resolution_due_at);
+    expect((await analyst.rpc('review_unfounded_contestation',{p_id:submitted.data,p_decision:'reopen',p_reason:'Analista tenta aprovar'})).error).not.toBeNull();
+    expect((await kam.rpc('review_unfounded_contestation',{p_id:submitted.data,p_decision:'reopen',p_reason:'KAM aprovou nova análise'})).error).toBeNull();
+    const reopened=await read(id);expect(reopened.status).toBe('reopened');expect(reopened.reopen_count).toBe(1);expect(reopened.first_response_due_at).toBe(before.first_response_due_at);
+    expect((await kam.rpc('review_unfounded_contestation',{p_id:submitted.data,p_decision:'reopen',p_reason:'Repetição'})).error).not.toBeNull();
+  });
 });

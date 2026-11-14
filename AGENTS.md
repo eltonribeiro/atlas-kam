@@ -37,4 +37,5 @@ use the editor.
 - Use shared Atlas brand, navigation, empty-section and authentication components to keep the staged pages consistent.
 - Keep occurrence transitions and business-calendar calculations in PostgreSQL RPCs; server functions authenticate each call and the UI renders available transitions without duplicating gates.
 - Capture resolution deadlines and milestones per SLA cycle in the database; reopening resets only the resolution cycle and preserves first response and past breaches.
+- Keep customer contestations separate from SLA state; server-only submission and role-checked transactional review prevent automatic or unauthorized reopening.
 - Use database-backed Node-environment tests for concrete business rules and isolated fictitious auth users for permission checks; never alter a real user's permissions or password for tests.
