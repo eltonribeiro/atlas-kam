@@ -15,6 +15,13 @@
       "when": 1794620478233,
       "tag": "0001_atlas_sla_engine",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794620656168,
+      "tag": "0002_atlas_integrity_guards",
+      "breakpoints": true
     }
   ]
 }

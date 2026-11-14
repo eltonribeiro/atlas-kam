@@ -1006,6 +1006,7 @@ export type Database = {
         }
         Returns: Json
       }
+      sla_tick: { Args: never; Returns: undefined }
       transition_occurrence: {
         Args: { p_action: string; p_occurrence_id: string; p_payload?: Json }
         Returns: Json
