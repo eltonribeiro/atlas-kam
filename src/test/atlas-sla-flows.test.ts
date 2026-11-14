@@ -112,4 +112,8 @@ describe('SLA lifecycle persisted rules',()=>{
     const reread=await admin.from('occurrence_sla_cycles').select('*').eq('occurrence_id',id).eq('cycle',1).single();expect(reread.data).toEqual(old.data);
     const transitions=await kam.rpc('available_transitions',{p_occurrence_id:id});expect(transitions.error).toBeNull();expect(transitions.data).toEqual(expect.arrayContaining([expect.objectContaining({action:'change_classification',allowed:true})]));
   });
+  it('rejects a subcategory that does not belong to the selected category',async()=>{
+    const id=await fixture();const o=await read(id);const other=await admin.from('categories').select('id').neq('id',o.category_id).limit(1).single();expect(other.error).toBeNull();
+    const invalid=await admin.from('occurrences').update({subcategory_id:other.data?.id}).eq('id',id);expect(invalid.error?.message).toContain('subcategoria deve pertencer');expect((await read(id)).subcategory_id).toBeNull();
+  });
 });
