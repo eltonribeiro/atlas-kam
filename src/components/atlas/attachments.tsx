@@ -1,0 +1,12 @@
+import { useRef,useState } from 'react';
+import { useServerFn } from '@tanstack/react-start';
+import { useQuery,useQueryClient } from '@tanstack/react-query';
+import { Paperclip,Download,Upload } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { getAttachments,uploadEvidence,downloadEvidence } from '@/lib/attachments.functions';
+export function Attachments({id}:{id:string}) {
+ const input=useRef<HTMLInputElement>(null);const [busy,setBusy]=useState(false);const [error,setError]=useState('');const qc=useQueryClient();
+ const upload=useServerFn(uploadEvidence);const download=useServerFn(downloadEvidence);
+ const {data=[],isPending}=useQuery({queryKey:['attachments',id],queryFn:()=>getAttachments({data:{id}})});
+ return <section className="work-section"><div className="section-title"><h2><Paperclip className="inline mr-2" size={18}/>Evidências · {data.length}/10</h2><Button variant="outline" disabled={busy||data.length>=10} onClick={()=>input.current?.click()}><Upload/>{busy?'Enviando…':'Anexar arquivos'}</Button></div><input ref={input} type="file" hidden multiple accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.csv,.xls,.xlsx,.eml,.msg" onChange={async e=>{const files=Array.from(e.target.files??[]);setError('');setBusy(true);try{if(files.length+data.length>10)throw new Error('Limite de 10 anexos por ocorrência.');for(const file of files){const f=new FormData();f.set('id',id);f.set('file',file);await upload({data:f});}await qc.invalidateQueries({queryKey:['attachments',id]});await qc.invalidateQueries({queryKey:['occurrence',id]});}catch(err){setError(err instanceof Error?err.message:'Falha no envio');await qc.invalidateQueries({queryKey:['attachments',id]});}finally{setBusy(false);e.target.value='';}}}/>{error&&<p className="form-error" role="alert">{error}</p>}{isPending?<p>Carregando anexos…</p>:data.length===0?<p className="text-muted-foreground">Nenhuma evidência anexada.</p>:<ul className="space-y-3">{data.map(a=><li key={a.id} className="flex items-center justify-between gap-4"><span className="break-all">{a.filename} <span className="text-muted-foreground">· {Math.ceil((a.size_bytes??0)/1024)} KB · Interno</span></span><Button variant="outline" size="icon" aria-label={`Baixar ${a.filename}`} onClick={async()=>{try{window.location.assign(await download({data:{id:a.id}}));}catch(err){setError(err instanceof Error?err.message:'Anexo indisponível');}}}><Download/></Button></li>)}</ul>}</section>;
+}
