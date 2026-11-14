@@ -108,7 +108,7 @@ export function AnalysisSection(props: AnalysisProps) {
                   <td>{names[a.owner_id] ?? '—'}</td>
                   <td className="font-mono">{formatDate(a.due_date)}{late && <span className="state-badge state-breach">Atrasada</span>}</td>
                   <td className="font-mono">{a.cause_id ? causeCode[a.cause_id] ?? 'Causa' : 'Sintoma'}</td>
-                  <td>{a.gates_solution ? 'Libera a solução' : a.type === 'preventive' ? 'Evita recorrência' : 'Melhoria'}</td>
+                  <td>{a.gates_solution ? 'Libera a solução' : a.type === 'preventive' ? 'Evita recorrência' : a.type === 'corrective' ? 'Elimina a causa' : 'Melhoria'}</td>
                 </tr>
               );
             })}
