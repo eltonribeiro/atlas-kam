@@ -16,6 +16,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedContasRouteImport } from './routes/_authenticated/contas'
 import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated/relatorios'
 import { Route as AvaliacaoTokenRouteImport } from './routes/avaliacao.$token'
+import { Route as ContestacaoTokenRouteImport } from './routes/contestacao.$token'
 import { Route as AuthenticatedConfigSlaRouteImport } from './routes/_authenticated/config.sla'
 import { Route as AuthenticatedOcorrenciasIndexRouteImport } from './routes/_authenticated/ocorrencias.index'
 import { Route as AuthenticatedOcorrenciasIdRouteImport } from './routes/_authenticated/ocorrencias.$id'
@@ -57,6 +58,11 @@ const AuthenticatedRelatoriosRoute = AuthenticatedRelatoriosRouteImport.update({
 const AvaliacaoTokenRoute = AvaliacaoTokenRouteImport.update({
   id: '/avaliacao/$token',
   path: '/avaliacao/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContestacaoTokenRoute = ContestacaoTokenRouteImport.update({
+  id: '/contestacao/$token',
+  path: '/contestacao/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedConfigSlaRoute = AuthenticatedConfigSlaRouteImport.update({
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/contas': typeof AuthenticatedContasRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/avaliacao/$token': typeof AvaliacaoTokenRoute
+  '/contestacao/$token': typeof ContestacaoTokenRoute
   '/config/sla': typeof AuthenticatedConfigSlaRoute
   '/ocorrencias/$id': typeof AuthenticatedOcorrenciasIdRoute
   '/ocorrencias/nova': typeof AuthenticatedOcorrenciasNovaRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/contas': typeof AuthenticatedContasRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/avaliacao/$token': typeof AvaliacaoTokenRoute
+  '/contestacao/$token': typeof ContestacaoTokenRoute
   '/config/sla': typeof AuthenticatedConfigSlaRoute
   '/ocorrencias/$id': typeof AuthenticatedOcorrenciasIdRoute
   '/ocorrencias/nova': typeof AuthenticatedOcorrenciasNovaRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/_authenticated/contas': typeof AuthenticatedContasRoute
   '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
   '/avaliacao/$token': typeof AvaliacaoTokenRoute
+  '/contestacao/$token': typeof ContestacaoTokenRoute
   '/_authenticated/config/sla': typeof AuthenticatedConfigSlaRoute
   '/_authenticated/ocorrencias/$id': typeof AuthenticatedOcorrenciasIdRoute
   '/_authenticated/ocorrencias/nova': typeof AuthenticatedOcorrenciasNovaRoute
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/contas'
     | '/relatorios'
     | '/avaliacao/$token'
+    | '/contestacao/$token'
     | '/config/sla'
     | '/ocorrencias/$id'
     | '/ocorrencias/nova'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/contas'
     | '/relatorios'
     | '/avaliacao/$token'
+    | '/contestacao/$token'
     | '/config/sla'
     | '/ocorrencias/$id'
     | '/ocorrencias/nova'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/_authenticated/contas'
     | '/_authenticated/relatorios'
     | '/avaliacao/$token'
+    | '/contestacao/$token'
     | '/_authenticated/config/sla'
     | '/_authenticated/ocorrencias/$id'
     | '/_authenticated/ocorrencias/nova'
@@ -214,6 +226,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   AvaliacaoTokenRoute: typeof AvaliacaoTokenRoute
+  ContestacaoTokenRoute: typeof ContestacaoTokenRoute
   ApiPublicJobsAtlasTickRoute: typeof ApiPublicJobsAtlasTickRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
@@ -267,6 +280,13 @@ declare module '@tanstack/react-router' {
       path: '/avaliacao/$token'
       fullPath: '/avaliacao/$token'
       preLoaderRoute: typeof AvaliacaoTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contestacao/$token': {
+      id: '/contestacao/$token'
+      path: '/contestacao/$token'
+      fullPath: '/contestacao/$token'
+      preLoaderRoute: typeof ContestacaoTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/config/sla': {
@@ -359,6 +379,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   AvaliacaoTokenRoute: AvaliacaoTokenRoute,
+  ContestacaoTokenRoute: ContestacaoTokenRoute,
   ApiPublicJobsAtlasTickRoute: ApiPublicJobsAtlasTickRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
