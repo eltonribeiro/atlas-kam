@@ -10,33 +10,185 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedContasRouteImport } from './routes/_authenticated/contas'
+import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated/relatorios'
+import { Route as AvaliacaoTokenRouteImport } from './routes/avaliacao.$token'
+import { Route as AuthenticatedConfigSlaRouteImport } from './routes/_authenticated/config.sla'
+import { Route as AuthenticatedOcorrenciasIndexRouteImport } from './routes/_authenticated/ocorrencias.index'
+import { Route as AuthenticatedOcorrenciasIdRouteImport } from './routes/_authenticated/ocorrencias.$id'
+import { Route as AuthenticatedOcorrenciasNovaRouteImport } from './routes/_authenticated/ocorrencias.nova'
+import { Route as AuthenticatedProblemasIndexRouteImport } from './routes/_authenticated/problemas.index'
+import { Route as AuthenticatedProblemasIdRouteImport } from './routes/_authenticated/problemas.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedContasRoute = AuthenticatedContasRouteImport.update({
+  id: '/contas',
+  path: '/contas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRelatoriosRoute = AuthenticatedRelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AvaliacaoTokenRoute = AvaliacaoTokenRouteImport.update({
+  id: '/avaliacao/$token',
+  path: '/avaliacao/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedConfigSlaRoute = AuthenticatedConfigSlaRouteImport.update({
+  id: '/config/sla',
+  path: '/config/sla',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedOcorrenciasIndexRoute =
+  AuthenticatedOcorrenciasIndexRouteImport.update({
+    id: '/ocorrencias/',
+    path: '/ocorrencias/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedOcorrenciasIdRoute =
+  AuthenticatedOcorrenciasIdRouteImport.update({
+    id: '/ocorrencias/$id',
+    path: '/ocorrencias/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedOcorrenciasNovaRoute =
+  AuthenticatedOcorrenciasNovaRouteImport.update({
+    id: '/ocorrencias/nova',
+    path: '/ocorrencias/nova',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProblemasIndexRoute =
+  AuthenticatedProblemasIndexRouteImport.update({
+    id: '/problemas/',
+    path: '/problemas/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProblemasIdRoute =
+  AuthenticatedProblemasIdRouteImport.update({
+    id: '/problemas/$id',
+    path: '/problemas/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/contas': typeof AuthenticatedContasRoute
+  '/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/avaliacao/$token': typeof AvaliacaoTokenRoute
+  '/config/sla': typeof AuthenticatedConfigSlaRoute
+  '/ocorrencias/$id': typeof AuthenticatedOcorrenciasIdRoute
+  '/ocorrencias/nova': typeof AuthenticatedOcorrenciasNovaRoute
+  '/problemas/$id': typeof AuthenticatedProblemasIdRoute
+  '/ocorrencias/': typeof AuthenticatedOcorrenciasIndexRoute
+  '/problemas/': typeof AuthenticatedProblemasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/contas': typeof AuthenticatedContasRoute
+  '/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/avaliacao/$token': typeof AvaliacaoTokenRoute
+  '/config/sla': typeof AuthenticatedConfigSlaRoute
+  '/ocorrencias/$id': typeof AuthenticatedOcorrenciasIdRoute
+  '/ocorrencias/nova': typeof AuthenticatedOcorrenciasNovaRoute
+  '/problemas/$id': typeof AuthenticatedProblemasIdRoute
+  '/ocorrencias': typeof AuthenticatedOcorrenciasIndexRoute
+  '/problemas': typeof AuthenticatedProblemasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/contas': typeof AuthenticatedContasRoute
+  '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/avaliacao/$token': typeof AvaliacaoTokenRoute
+  '/_authenticated/config/sla': typeof AuthenticatedConfigSlaRoute
+  '/_authenticated/ocorrencias/$id': typeof AuthenticatedOcorrenciasIdRoute
+  '/_authenticated/ocorrencias/nova': typeof AuthenticatedOcorrenciasNovaRoute
+  '/_authenticated/problemas/$id': typeof AuthenticatedProblemasIdRoute
+  '/_authenticated/ocorrencias/': typeof AuthenticatedOcorrenciasIndexRoute
+  '/_authenticated/problemas/': typeof AuthenticatedProblemasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/contas'
+    | '/relatorios'
+    | '/avaliacao/$token'
+    | '/config/sla'
+    | '/ocorrencias/$id'
+    | '/ocorrencias/nova'
+    | '/problemas/$id'
+    | '/ocorrencias/'
+    | '/problemas/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/contas'
+    | '/relatorios'
+    | '/avaliacao/$token'
+    | '/config/sla'
+    | '/ocorrencias/$id'
+    | '/ocorrencias/nova'
+    | '/problemas/$id'
+    | '/ocorrencias'
+    | '/problemas'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/reset-password'
+    | '/_authenticated/contas'
+    | '/_authenticated/relatorios'
+    | '/avaliacao/$token'
+    | '/_authenticated/config/sla'
+    | '/_authenticated/ocorrencias/$id'
+    | '/_authenticated/ocorrencias/nova'
+    | '/_authenticated/problemas/$id'
+    | '/_authenticated/ocorrencias/'
+    | '/_authenticated/problemas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  AvaliacaoTokenRoute: typeof AvaliacaoTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +200,124 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/contas': {
+      id: '/_authenticated/contas'
+      path: '/contas'
+      fullPath: '/contas'
+      preLoaderRoute: typeof AuthenticatedContasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/relatorios': {
+      id: '/_authenticated/relatorios'
+      path: '/relatorios'
+      fullPath: '/relatorios'
+      preLoaderRoute: typeof AuthenticatedRelatoriosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/avaliacao/$token': {
+      id: '/avaliacao/$token'
+      path: '/avaliacao/$token'
+      fullPath: '/avaliacao/$token'
+      preLoaderRoute: typeof AvaliacaoTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/config/sla': {
+      id: '/_authenticated/config/sla'
+      path: '/config/sla'
+      fullPath: '/config/sla'
+      preLoaderRoute: typeof AuthenticatedConfigSlaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ocorrencias/': {
+      id: '/_authenticated/ocorrencias/'
+      path: '/ocorrencias'
+      fullPath: '/ocorrencias/'
+      preLoaderRoute: typeof AuthenticatedOcorrenciasIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ocorrencias/$id': {
+      id: '/_authenticated/ocorrencias/$id'
+      path: '/ocorrencias/$id'
+      fullPath: '/ocorrencias/$id'
+      preLoaderRoute: typeof AuthenticatedOcorrenciasIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ocorrencias/nova': {
+      id: '/_authenticated/ocorrencias/nova'
+      path: '/ocorrencias/nova'
+      fullPath: '/ocorrencias/nova'
+      preLoaderRoute: typeof AuthenticatedOcorrenciasNovaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/problemas/': {
+      id: '/_authenticated/problemas/'
+      path: '/problemas'
+      fullPath: '/problemas/'
+      preLoaderRoute: typeof AuthenticatedProblemasIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/problemas/$id': {
+      id: '/_authenticated/problemas/$id'
+      path: '/problemas/$id'
+      fullPath: '/problemas/$id'
+      preLoaderRoute: typeof AuthenticatedProblemasIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedContasRoute: typeof AuthenticatedContasRoute
+  AuthenticatedRelatoriosRoute: typeof AuthenticatedRelatoriosRoute
+  AuthenticatedConfigSlaRoute: typeof AuthenticatedConfigSlaRoute
+  AuthenticatedOcorrenciasIdRoute: typeof AuthenticatedOcorrenciasIdRoute
+  AuthenticatedOcorrenciasNovaRoute: typeof AuthenticatedOcorrenciasNovaRoute
+  AuthenticatedProblemasIdRoute: typeof AuthenticatedProblemasIdRoute
+  AuthenticatedOcorrenciasIndexRoute: typeof AuthenticatedOcorrenciasIndexRoute
+  AuthenticatedProblemasIndexRoute: typeof AuthenticatedProblemasIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedContasRoute: AuthenticatedContasRoute,
+  AuthenticatedRelatoriosRoute: AuthenticatedRelatoriosRoute,
+  AuthenticatedConfigSlaRoute: AuthenticatedConfigSlaRoute,
+  AuthenticatedOcorrenciasIdRoute: AuthenticatedOcorrenciasIdRoute,
+  AuthenticatedOcorrenciasNovaRoute: AuthenticatedOcorrenciasNovaRoute,
+  AuthenticatedProblemasIdRoute: AuthenticatedProblemasIdRoute,
+  AuthenticatedOcorrenciasIndexRoute: AuthenticatedOcorrenciasIndexRoute,
+  AuthenticatedProblemasIndexRoute: AuthenticatedProblemasIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  AvaliacaoTokenRoute: AvaliacaoTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

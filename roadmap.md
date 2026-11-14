@@ -1,6 +1,6 @@
 # Atlas KAM — Entregas
 
-- [ ] Etapa 1 — Base visual, navegação e acesso por e-mail. Bloqueio: confirmar se a primeira implementação pode usar Lovable Cloud ou deve depender da instância privada Azure, conforme o plano aprovado.
+- [ ] Etapa 1 — Base visual, navegação e acesso por e-mail. Lovable Cloud autorizado e ativo; páginas criadas, verificação de acesso em andamento.
 - [ ] Etapa 2 — Banco, permissões e dados de teste. Depende da validação da etapa 1.
 - [ ] Etapa 3 — SLA e máquina de estados. Depende da validação da etapa 2.
 - [ ] Etapa 4 — Registro de ocorrência. Depende da validação da etapa 3.
