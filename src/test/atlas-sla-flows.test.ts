@@ -27,7 +27,7 @@ describe('SLA lifecycle persisted rules',()=>{
     const url=process.env['SUPABASE_URL'];const key=process.env['SUPABASE_SERVICE_ROLE_KEY'];const pub=process.env['SUPABASE_PUBLISHABLE_KEY'];
     if(!url||!key||!pub)throw new Error('Test configuration unavailable');
     admin=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
-    for(const [role,id] of [['kam',kamId],['analyst','2a529347-3e93-4a69-87a7-f3cc22868fea']]) {
+    for(const [role,id] of [['kam',kamId],['analyst','2a529347-3e93-4a69-87a7-f3cc22868fea']] as const) {
       const email=`atlas-test-${role}@example.com`;const user=await admin.auth.admin.getUserById(id);
       if(user.data.user?.email!==email)throw new Error('Refusing to alter a real identity');
       const password=crypto.randomUUID()+crypto.randomUUID();
