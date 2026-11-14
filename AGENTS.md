@@ -39,3 +39,4 @@ use the editor.
 - Capture resolution deadlines and milestones per SLA cycle in the database; reopening resets only the resolution cycle and preserves first response and past breaches.
 - Keep customer contestations separate from SLA state; server-only submission and role-checked transactional review prevent automatic or unauthorized reopening.
 - Use database-backed Node-environment tests for concrete business rules and isolated fictitious auth users for permission checks; never alter a real user's permissions or password for tests.
+- Send app emails only from feature-specific server handlers through the managed template helper; managed delivery owns retries and suppression, so no email queues or generic send endpoints are created.

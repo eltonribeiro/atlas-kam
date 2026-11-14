@@ -6,7 +6,8 @@ import { TEMPLATES } from './registry'
 // Server-only: reads LOVABLE_API_KEY. Never import from client components.
 
 // Configuration baked in at scaffold time
-const SITE_NAME = "Screenshot to Life"
+const SITE_NAME = "Atlas KAM"
+const DEFAULT_REPLY_TO = "elton.ribeiro@grupotpc.com"
 // SENDER_DOMAIN is the verified sender FQDN: a delegated subdomain (e.g., "notify.example.com"), or, on a
 // domain registered through Lovable, the domain itself or a name under it (e.g., "example.com", "app.example.com").
 // It MUST match the sender verified in Lovable's email setup.
@@ -78,7 +79,7 @@ export async function sendTemplateEmail(
         purpose: 'transactional',
         label: templateName,
         idempotency_key: options.idempotencyKey || crypto.randomUUID(),
-        ...(options.replyTo ? { reply_to: options.replyTo } : {}),
+        reply_to: options.replyTo || DEFAULT_REPLY_TO,
       },
       { apiKey, sendUrl: process.env['LOVABLE_SEND_URL'] }
     )
