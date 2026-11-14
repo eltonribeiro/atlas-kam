@@ -18,7 +18,7 @@ export type ClaimedDispatch = {
   name: string | null;
 };
 
-export type DispatchOutcome = { status: 'sent' | 'suppressed' | 'skipped' | 'failed'; error?: string; retryAfter?: number };
+export type DispatchOutcome = { status: 'sent' | 'suppressed' | 'skipped' | 'failed'; error?: string | undefined; retryAfter?: number | undefined };
 
 const RESERVED_DOMAIN = /(^|\.)(example\.(com|net|org)|example|test|invalid|localhost)$/i;
 
