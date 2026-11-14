@@ -14,7 +14,9 @@ import { uploadEvidence } from '@/lib/attachments.functions';
 import { EVIDENCE_ACCEPT, evidenceProblem } from '@/lib/evidence-rules';
 import { FieldError, actionLabels, causeStatusLabels, downloadCsv, formatDate, sixMLabels, todayInSaoPaulo } from '../occurrence-ui';
 
-type Cause = { id: string; code: string; description: string; kind: 'root' | 'contributing'; status: 'hypothesis' | 'validating' | 'confirmed' | 'discarded'; category: keyof typeof sixMLabels | null; evidence: string | null; whys: string[] };
+type SixM = 'method' | 'machine' | 'manpower' | 'material' | 'measurement' | 'environment';
+const sixMKeys: SixM[] = ['method', 'machine', 'manpower', 'material', 'measurement', 'environment'];
+type Cause = { id: string; code: string; description: string; kind: 'root' | 'contributing'; status: 'hypothesis' | 'validating' | 'confirmed' | 'discarded'; category: SixM | null; evidence: string | null; whys: string[] };
 type Action = { id: string; type: string; what: string; why: string | null; where_text: string | null; how: string | null; how_much: number | null; owner_id: string; due_date: string; status: string; done_at: string | null; evidence_note: string | null; cause_id: string | null; gates_solution: boolean | null };
 type Member = { id: string; full_name: string; role: string };
 
@@ -63,7 +65,7 @@ export function AnalysisSection(props: AnalysisProps) {
         </TabsContent>
         <TabsContent value="ishikawa">
           <div className="ishikawa-grid">
-            {(Object.keys(sixMLabels) as (keyof typeof sixMLabels)[]).map((k) => {
+            {sixMKeys.map((k) => {
               const items = props.causes.filter((c) => c.category === k && c.status !== 'discarded');
               return (
                 <div key={k} className="ishikawa-box">
