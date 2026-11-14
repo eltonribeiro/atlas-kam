@@ -29,7 +29,7 @@ export function SlaConfig() {
     <main className="atlas-main">
       <PageHeading eyebrow="CONFIGURAÇÃO" title="Contratos e SLA" subtitle={data.canEdit ? 'Políticas de prazo, calendários úteis e categorias. Toda alteração fica registrada no histórico.' : 'Consulta das políticas de prazo e calendários. Somente o administrador altera a configuração.'} />
       <Tabs defaultValue="policies">
-        <TabsList aria-label="Seções da configuração"><TabsTrigger value="policies">Políticas de SLA</TabsTrigger><TabsTrigger value="calendars">Calendários e feriados</TabsTrigger><TabsTrigger value="categories">Categorias</TabsTrigger>{data.canEdit && <TabsTrigger value="audit">Histórico</TabsTrigger>}</TabsList>
+        <TabsList className="atlas-tabs" aria-label="Seções da configuração"><TabsTrigger value="policies">Políticas de SLA</TabsTrigger><TabsTrigger value="calendars">Calendários e feriados</TabsTrigger><TabsTrigger value="categories">Categorias</TabsTrigger>{data.canEdit && <TabsTrigger value="audit">Histórico</TabsTrigger>}</TabsList>
         <TabsContent value="policies"><Policies data={data} /></TabsContent>
         <TabsContent value="calendars"><Calendars data={data} /></TabsContent>
         <TabsContent value="categories"><Categories data={data} /></TabsContent>

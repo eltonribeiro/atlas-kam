@@ -27,7 +27,7 @@ export function AccountsAdmin() {
       <PageHeading eyebrow="CONTAS-CHAVE" title="Contas" subtitle={data.isAdmin ? 'Contas, contatos autorizados, equipe e alocação. Perfis de acesso são definidos somente aqui.' : 'Contas da sua carteira, contatos e contrato de SLA aplicado.'} />
       {data.isAdmin ? (
         <Tabs defaultValue="accounts">
-          <TabsList aria-label="Cadastros"><TabsTrigger value="accounts">Contas e contatos</TabsTrigger><TabsTrigger value="staff">Equipe e acessos</TabsTrigger></TabsList>
+          <TabsList className="atlas-tabs" aria-label="Cadastros"><TabsTrigger value="accounts">Contas e contatos</TabsTrigger><TabsTrigger value="staff">Equipe e acessos</TabsTrigger></TabsList>
           <TabsContent value="accounts"><AccountsTab data={data} /></TabsContent>
           <TabsContent value="staff"><StaffTab data={data} /></TabsContent>
         </Tabs>

@@ -48,7 +48,7 @@ export function AnalysisSection(props: AnalysisProps) {
         {props.canEdit && <div className="heading-actions"><Button variant="outline" onClick={() => setCauseSheet({})}><Plus />Adicionar causa</Button><Button variant="outline" onClick={() => setActionSheet(true)}><Plus />Adicionar ação</Button></div>}
       </div>
       <Tabs defaultValue="whys">
-        <TabsList aria-label="Método de análise"><TabsTrigger value="whys">5 Porquês</TabsTrigger><TabsTrigger value="ishikawa">Ishikawa 6M</TabsTrigger><TabsTrigger value="8d">8D</TabsTrigger></TabsList>
+        <TabsList className="atlas-tabs" aria-label="Método de análise"><TabsTrigger value="whys">5 Porquês</TabsTrigger><TabsTrigger value="ishikawa">Ishikawa 6M</TabsTrigger><TabsTrigger value="8d">8D</TabsTrigger></TabsList>
         <TabsContent value="whys">
           {!props.causes.length ? <p className="empty-row">Nenhuma causa registrada. Comece pela hipótese mais provável e confirme com evidência.</p> : (
             <div className="cause-list">

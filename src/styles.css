@@ -314,3 +314,4 @@ h1, h2, p { margin: 0; } h1 { font-size: 28px; font-weight: 600; line-height: 1.
 @media(max-width:850px){.chart-columns,.account-grid{grid-template-columns:1fr;}.detail-head{flex-direction:column;}.eight-d{grid-template-columns:1fr;}.eight-d dt{border-bottom:0;padding-bottom:0;}}
 @media(max-width:540px){.kpi-grid,.ishikawa-grid{grid-template-columns:1fr;}.kpi-card{min-height:0;}.kpi-value{font-size:24px;}.filter-row>.select-field,.filter-row>.search-field{width:100%;}.score-option span{width:42px;height:42px;}.transition-item{max-width:none;width:100%;}.transition-item>button{width:100%;}}
 .public-card > .field:first-child{margin-top:0;}
+.atlas-tabs{max-width:100%;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;}.atlas-tabs::-webkit-scrollbar{display:none;}.atlas-tabs > button{flex:0 0 auto;}
