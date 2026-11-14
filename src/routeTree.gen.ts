@@ -22,6 +22,7 @@ import { Route as AuthenticatedOcorrenciasIdRouteImport } from './routes/_authen
 import { Route as AuthenticatedOcorrenciasNovaRouteImport } from './routes/_authenticated/ocorrencias.nova'
 import { Route as AuthenticatedProblemasIndexRouteImport } from './routes/_authenticated/problemas.index'
 import { Route as AuthenticatedProblemasIdRouteImport } from './routes/_authenticated/problemas.$id'
+import { Route as ApiPublicJobsAtlasTickRouteImport } from './routes/api/public/jobs/atlas-tick'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
@@ -93,6 +94,11 @@ const AuthenticatedProblemasIdRoute =
     path: '/problemas/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicJobsAtlasTickRoute = ApiPublicJobsAtlasTickRouteImport.update({
+  id: '/api/public/jobs/atlas-tick',
+  path: '/api/public/jobs/atlas-tick',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
     id: '/lovable/email/transactional/preview',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/problemas/$id': typeof AuthenticatedProblemasIdRoute
   '/ocorrencias/': typeof AuthenticatedOcorrenciasIndexRoute
   '/problemas/': typeof AuthenticatedProblemasIndexRoute
+  '/api/public/jobs/atlas-tick': typeof ApiPublicJobsAtlasTickRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -128,6 +135,7 @@ export interface FileRoutesByTo {
   '/problemas/$id': typeof AuthenticatedProblemasIdRoute
   '/ocorrencias': typeof AuthenticatedOcorrenciasIndexRoute
   '/problemas': typeof AuthenticatedProblemasIndexRoute
+  '/api/public/jobs/atlas-tick': typeof ApiPublicJobsAtlasTickRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/_authenticated/problemas/$id': typeof AuthenticatedProblemasIdRoute
   '/_authenticated/ocorrencias/': typeof AuthenticatedOcorrenciasIndexRoute
   '/_authenticated/problemas/': typeof AuthenticatedProblemasIndexRoute
+  '/api/public/jobs/atlas-tick': typeof ApiPublicJobsAtlasTickRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
     | '/problemas/$id'
     | '/ocorrencias/'
     | '/problemas/'
+    | '/api/public/jobs/atlas-tick'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/problemas/$id'
     | '/ocorrencias'
     | '/problemas'
+    | '/api/public/jobs/atlas-tick'
     | '/lovable/email/transactional/preview'
   id:
     | '__root__'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/_authenticated/problemas/$id'
     | '/_authenticated/ocorrencias/'
     | '/_authenticated/problemas/'
+    | '/api/public/jobs/atlas-tick'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
@@ -202,6 +214,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   AvaliacaoTokenRoute: typeof AvaliacaoTokenRoute
+  ApiPublicJobsAtlasTickRoute: typeof ApiPublicJobsAtlasTickRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProblemasIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/jobs/atlas-tick': {
+      id: '/api/public/jobs/atlas-tick'
+      path: '/api/public/jobs/atlas-tick'
+      fullPath: '/api/public/jobs/atlas-tick'
+      preLoaderRoute: typeof ApiPublicJobsAtlasTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/transactional/preview': {
       id: '/lovable/email/transactional/preview'
       path: '/lovable/email/transactional/preview'
@@ -339,6 +359,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   AvaliacaoTokenRoute: AvaliacaoTokenRoute,
+  ApiPublicJobsAtlasTickRoute: ApiPublicJobsAtlasTickRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
