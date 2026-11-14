@@ -12,7 +12,7 @@ export function listFilters(search: OccurrenceFilters) {
 export const occurrenceListOptions = (search: OccurrenceFilters) =>
   queryOptions({ queryKey: ['occurrences', listFilters(search)], queryFn: () => listOccurrences({ data: listFilters(search) }) });
 
-export const dashboardOptions = (period: OccurrenceFilters['period'], accountId?: string) => {
+export const dashboardOptions = (period: OccurrenceFilters['period'], accountId?: string | undefined) => {
   const range = periodRange(period);
   return queryOptions({ queryKey: ['dashboard', range.from, range.to, accountId ?? null], queryFn: () => getDashboard({ data: { from: range.from, to: range.to, accountId: accountId ?? null } }), staleTime: 60000 });
 };

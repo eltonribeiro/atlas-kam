@@ -73,7 +73,7 @@ export const createProblem = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ title: z.string().trim().min(5, 'O título precisa de pelo menos 5 caracteres.').max(140), accountId: z.string().uuid().nullable(), categoryId: z.string().uuid().nullable(), occurrenceId: z.string().uuid().nullable() }))
   .handler(async ({ context, data }) => {
-    const r = await context.supabase.rpc('create_problem', { p_title: data.title, p_account_id: data.accountId as string, p_category_id: data.categoryId as string, p_occurrence_id: data.occurrenceId ?? undefined });
+    const r = await context.supabase.rpc('create_problem', { p_title: data.title, p_account_id: data.accountId as string, p_category_id: data.categoryId as string, ...(data.occurrenceId ? { p_occurrence_id: data.occurrenceId } : {}) });
     if (r.error) friendly(r.error, 'Não foi possível criar o problema.');
     return { id: r.data as string };
   });

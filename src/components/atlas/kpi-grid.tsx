@@ -12,8 +12,8 @@ type Kpi = {
   definition: string;
   delta: { text: string; better: boolean | null } | null;
   sample: string;
-  extra?: string;
-  warning?: string;
+  extra?: string | undefined;
+  warning?: string | undefined;
 };
 
 function delta(current: number | null, previous: number | null, higherIsBetter: boolean, format: (d: number) => string): Kpi['delta'] {

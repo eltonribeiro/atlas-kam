@@ -16,11 +16,11 @@ export const getDashboard = createServerFn()
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), accountId: z.string().uuid().nullable() }))
   .handler(async ({ context, data }) => {
-    const account = data.accountId ?? undefined;
+    const account = data.accountId ? { p_account_id: data.accountId } : {};
     const [kpis, pareto, aging] = await Promise.all([
-      context.supabase.rpc('dashboard_kpis', { p_from: data.from, p_to: data.to, p_account_id: account }),
-      context.supabase.rpc('occurrence_pareto', { p_account_id: account }),
-      context.supabase.rpc('backlog_aging', { p_account_id: account }),
+      context.supabase.rpc('dashboard_kpis', { p_from: data.from, p_to: data.to, ...account }),
+      context.supabase.rpc('occurrence_pareto', account),
+      context.supabase.rpc('backlog_aging', account),
     ]);
     if (kpis.error || pareto.error || aging.error) throw new Error('Não foi possível calcular os indicadores.');
     const k = kpis.data as { current: KpiWindow; previous: KpiWindow; from: string; to: string; previous_from: string };

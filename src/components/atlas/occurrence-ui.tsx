@@ -59,7 +59,7 @@ export function todayInSaoPaulo() {
   return new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
 }
 
-export function DateTime({ value }: { value?: string | null }) {
+export function DateTime({ value }: { value?: string | null | undefined }) {
   return <span className="font-mono">{formatDateTime(value)}</span>;
 }
 export function StateBadge({ status }: { status: string }) {
@@ -71,20 +71,20 @@ export function SeverityBadge({ severity, withName = false }: { severity: string
 }
 
 /** Resolution clock badge: state is always written, never color only. */
-export function SlaBadge({ state, due, pausedSince }: { state?: string | null; due?: string | null; pausedSince?: string | null }) {
+export function SlaBadge({ state, due, pausedSince }: { state?: string | null | undefined; due?: string | null | undefined; pausedSince?: string | null | undefined }) {
   if (state === 'paused') return <span className="state-badge state-pause">Pausado{pausedSince ? ` há ${formatElapsed(pausedSince)}` : ''}</span>;
   if (state === 'stopped') return <span className="state-badge state-pause">Parado</span>;
   if (state === 'breached') return <span className="state-badge state-breach">Violado{due ? ` há ${formatElapsed(due)}` : ''}</span>;
   if (state === 'risk') return <span className="state-badge state-risk">Em risco · vence {formatShortDateTime(due)}</span>;
   return <span className="state-badge state-ok">No prazo · vence {formatShortDateTime(due)}</span>;
 }
-export function FirstResponseBadge({ at, due, breached, minutes, closed }: { at?: string | null; due?: string | null; breached?: boolean | null; minutes?: number | null; closed?: boolean }) {
+export function FirstResponseBadge({ at, due, breached, minutes, closed }: { at?: string | null | undefined; due?: string | null | undefined; breached?: boolean | null | undefined; minutes?: number | null | undefined; closed?: boolean | undefined }) {
   if (at) return <span className={`state-badge ${breached ? 'state-breach' : 'state-ok'}`}>{breached ? 'Fora do prazo' : 'No prazo'} · {formatMinutes(minutes)}</span>;
   if (closed) return <span className="state-badge state-pause">Sem resposta registrada</span>;
   if (due && Date.now() > Date.parse(due)) return <span className="state-badge state-breach">Violado há {formatElapsed(due)}</span>;
   return <span className="state-badge state-neutral">Vence {formatShortDateTime(due)}</span>;
 }
-export function EvaluationSummary({ sent, answered, resolved, csat, ces }: { sent?: boolean | null; answered?: string | null; resolved?: string | null; csat?: number | null; ces?: number | null }) {
+export function EvaluationSummary({ sent, answered, resolved, csat, ces }: { sent?: boolean | null | undefined; answered?: string | null | undefined; resolved?: string | null | undefined; csat?: number | null | undefined; ces?: number | null | undefined }) {
   if (answered && resolved && resolved !== 'yes') return <span className="state-badge state-breach">não resolvido</span>;
   if (answered) return <span className="font-mono">CSAT {csat} · CES {ces}</span>;
   if (sent) return <span className="text-muted-foreground">aguardando</span>;
@@ -96,16 +96,16 @@ export function Conditions({ items }: { items: { label: string; met: boolean }[]
   return <ul className="condition-list">{items.map((c) => <li key={c.label} className={c.met ? 'condition-met' : 'condition-pending'}><span aria-hidden="true">{c.met ? '✓' : '!'}</span>{c.label}<span className="sr-only">{c.met ? ' — atendida' : ' — pendente'}</span></li>)}</ul>;
 }
 
-export function ErrorState({ error, retry }: { error: unknown; retry?: () => void }) {
+export function ErrorState({ error, retry }: { error: unknown; retry?: (() => void) | undefined }) {
   return <div className="data-message" role="alert"><p>{error instanceof Error ? error.message : 'Não foi possível carregar os dados.'}</p>{retry && <Button variant="outline" onClick={retry}>Tentar novamente</Button>}</div>;
 }
-export function LoadingState({ label = 'Carregando…' }: { label?: string }) {
+export function LoadingState({ label = 'Carregando…' }: { label?: string | undefined }) {
   return <div className="data-message" role="status"><span className="loading-bar" aria-hidden="true" />{label}</div>;
 }
-export function FieldError({ message, id }: { message?: string; id?: string }) {
+export function FieldError({ message, id }: { message?: string | undefined; id?: string | undefined }) {
   return message ? <span className="field-error" id={id} role="alert">{message}</span> : null;
 }
-export function PageHeading({ eyebrow, title, subtitle, actions }: { eyebrow: string; title: string; subtitle?: string; actions?: ReactNode }) {
+export function PageHeading({ eyebrow, title, subtitle, actions }: { eyebrow: string; title: string; subtitle?: string | undefined; actions?: ReactNode }) {
   return <div className="page-heading"><div><p className="eyebrow">{eyebrow}</p><h1>{title}</h1>{subtitle && <p className="page-subtitle">{subtitle}</p>}</div>{actions && <div className="heading-actions">{actions}</div>}</div>;
 }
 

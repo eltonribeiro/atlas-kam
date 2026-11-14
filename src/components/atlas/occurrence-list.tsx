@@ -49,14 +49,14 @@ export function OccurrenceDashboard() {
   );
 }
 
-function DashboardIndicators({ period, account }: { period: OccurrenceFilters['period']; account?: string }) {
+function DashboardIndicators({ period, account }: { period: OccurrenceFilters['period']; account?: string | undefined }) {
   const q = useQuery({ ...dashboardOptions(period, account), placeholderData: keepPreviousData });
   if (q.error) return <ErrorState error={q.error} retry={() => void q.refetch()} />;
   if (!q.data) return <div className="kpi-grid" aria-busy="true">{Array.from({ length: 8 }, (_, i) => <div key={i} className="kpi-card skeleton-card" />)}</div>;
   return <div className={q.isFetching ? 'is-refreshing' : ''}><KpiGrid current={q.data.current} previous={q.data.previous} /></div>;
 }
 
-function DashboardCharts({ period, account }: { period: OccurrenceFilters['period']; account?: string }) {
+function DashboardCharts({ period, account }: { period: OccurrenceFilters['period']; account?: string | undefined }) {
   const q = useQuery({ ...dashboardOptions(period, account), placeholderData: keepPreviousData });
   if (!q.data) return null;
   const { pareto, aging } = q.data;
