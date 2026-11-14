@@ -11,19 +11,27 @@ async function authorizedEvaluation(token: string) {
   const admin = await guardPublicAttempt(hash);
   const link = await admin.from('public_links').select('purpose,evaluation_id').eq('token_hash', hash).maybeSingle();
   if (!link.data || link.data.purpose !== 'evaluation' || !link.data.evaluation_id) throw new Error(INVALID);
-  const e = await admin.from('evaluations').select('id,cycle,answered_at,token_expires_at').eq('id', link.data.evaluation_id).single();
+  const e = await admin.from('evaluations').select('id,cycle,answered_at,token_expires_at,occurrence_id').eq('id', link.data.evaluation_id).single();
   if (!e.data) throw new Error(INVALID);
   const o = await admin
     .from('occurrences')
     .select('id,protocol,subject,customer_expectation,solution_text,created_at,solution_proposed_at,closed_at,status,reopen_count')
-    .eq('id', (await admin.from('evaluations').select('occurrence_id').eq('id', e.data.id).single()).data?.occurrence_id ?? '')
+    .eq('id', e.data.occurrence_id)
     .single();
   if (!o.data || e.data.cycle !== o.data.reopen_count + 1) throw new Error(INVALID);
   const canReopen = ['closed_resolved', 'closed_no_evaluation'].includes(o.data.status) && o.data.closed_at !== null && Date.now() <= Date.parse(o.data.closed_at) + 15 * 86400000;
   const canAnswer = !e.data.answered_at && o.data.status === 'solution_proposed' && Date.now() <= Date.parse(e.data.token_expires_at);
   if (!canAnswer && !canReopen) throw new Error(INVALID);
-  const { id: occurrenceId, reopen_count: _cycle, status: _status, ...summary } = o.data;
-  return { admin, hash, occurrenceId, summary, canAnswer, canReopen, reopenUntil: canReopen && o.data.closed_at ? new Date(Date.parse(o.data.closed_at) + 15 * 86400000).toISOString() : null };
+  const summary = {
+    protocol: o.data.protocol,
+    subject: o.data.subject,
+    customer_expectation: o.data.customer_expectation,
+    solution_text: o.data.solution_text,
+    created_at: o.data.created_at,
+    solution_proposed_at: o.data.solution_proposed_at,
+    closed_at: o.data.closed_at,
+  };
+  return { admin, hash, occurrenceId: o.data.id, summary, canAnswer, canReopen, reopenUntil: canReopen && o.data.closed_at ? new Date(Date.parse(o.data.closed_at) + 15 * 86400000).toISOString() : null };
 }
 
 export const getPublicEvaluation = createServerFn({ method: 'POST' })
