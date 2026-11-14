@@ -1,0 +1,4 @@
+REVOKE EXECUTE ON FUNCTION public.validate_attachment_upload() FROM PUBLIC, anon, authenticated;
+COMMENT ON TABLE public.public_links IS 'Server-only: public link tokens are read and written exclusively by service-role handlers; RLS with no policies denies all client access by design.';
+COMMENT ON TABLE public.public_link_attempts IS 'Server-only: rate-limit counters written exclusively by service-role handlers; RLS with no policies denies all client access by design.';
+COMMENT ON TABLE public.protocol_counters IS 'Internal: protocol sequences updated only by security-definer triggers; RLS with no policies denies all client access by design.';
