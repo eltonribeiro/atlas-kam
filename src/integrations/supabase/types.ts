@@ -572,12 +572,68 @@ export type Database = {
           },
         ]
       }
+      occurrence_sla_cycles: {
+        Row: {
+          cycle: number
+          due_at: string
+          ended_at: string | null
+          occurrence_id: string
+          paused_business_minutes: number
+          resolution_breached: boolean
+          resolution_minutes: number
+          severity: Database["public"]["Enums"]["occ_severity"]
+          solution_proposed_at: string | null
+          started_at: string
+        }
+        Insert: {
+          cycle: number
+          due_at: string
+          ended_at?: string | null
+          occurrence_id: string
+          paused_business_minutes?: number
+          resolution_breached?: boolean
+          resolution_minutes: number
+          severity: Database["public"]["Enums"]["occ_severity"]
+          solution_proposed_at?: string | null
+          started_at: string
+        }
+        Update: {
+          cycle?: number
+          due_at?: string
+          ended_at?: string | null
+          occurrence_id?: string
+          paused_business_minutes?: number
+          resolution_breached?: boolean
+          resolution_minutes?: number
+          severity?: Database["public"]["Enums"]["occ_severity"]
+          solution_proposed_at?: string | null
+          started_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "occurrence_sla_cycles_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "occurrences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "occurrence_sla_cycles_occurrence_id_fkey"
+            columns: ["occurrence_id"]
+            isOneToOne: false
+            referencedRelation: "v_occurrence_sla"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       occurrences: {
         Row: {
           account_id: string
           assignee_id: string | null
           category_id: string
           channel: Database["public"]["Enums"]["occ_channel"]
+          classification_confirmed_at: string | null
+          classification_confirmed_by: string | null
           closed_at: string | null
           contact_id: string
           created_at: string
@@ -593,6 +649,7 @@ export type Database = {
           next_update_due_at: string | null
           occurred_at: string | null
           paused_business_minutes: number
+          paused_from_status: Database["public"]["Enums"]["occ_status"] | null
           paused_since: string | null
           problem_id: string | null
           protocol: string
@@ -617,6 +674,8 @@ export type Database = {
           assignee_id?: string | null
           category_id: string
           channel: Database["public"]["Enums"]["occ_channel"]
+          classification_confirmed_at?: string | null
+          classification_confirmed_by?: string | null
           closed_at?: string | null
           contact_id: string
           created_at?: string
@@ -632,6 +691,7 @@ export type Database = {
           next_update_due_at?: string | null
           occurred_at?: string | null
           paused_business_minutes?: number
+          paused_from_status?: Database["public"]["Enums"]["occ_status"] | null
           paused_since?: string | null
           problem_id?: string | null
           protocol: string
@@ -656,6 +716,8 @@ export type Database = {
           assignee_id?: string | null
           category_id?: string
           channel?: Database["public"]["Enums"]["occ_channel"]
+          classification_confirmed_at?: string | null
+          classification_confirmed_by?: string | null
           closed_at?: string | null
           contact_id?: string
           created_at?: string
@@ -671,6 +733,7 @@ export type Database = {
           next_update_due_at?: string | null
           occurred_at?: string | null
           paused_business_minutes?: number
+          paused_from_status?: Database["public"]["Enums"]["occ_status"] | null
           paused_since?: string | null
           problem_id?: string | null
           protocol?: string
@@ -710,6 +773,13 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "occurrences_classification_confirmed_by_fkey"
+            columns: ["classification_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
@@ -1005,6 +1075,20 @@ export type Database = {
           p_urgency: Database["public"]["Enums"]["occ_level"]
         }
         Returns: Json
+      }
+      reopen_occurrence_from_customer: {
+        Args: { p_occurrence_id: string; p_reason: string }
+        Returns: Json
+      }
+      revise_occurrence_classification: {
+        Args: {
+          p_category_id: string
+          p_impact: Database["public"]["Enums"]["occ_level"]
+          p_occurrence_id: string
+          p_reason: string
+          p_urgency: Database["public"]["Enums"]["occ_level"]
+        }
+        Returns: undefined
       }
       sla_tick: { Args: never; Returns: undefined }
       transition_occurrence: {
