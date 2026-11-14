@@ -8,4 +8,4 @@
 - [ ] Etapa 6 — Avaliação pública e notificações. Depende da validação da etapa 5 e das definições de contestação e envio de e-mails do plano.
 - [ ] Etapa 7 — Painel, Problemas e configuração. Depende da validação da etapa 6.
 
-Executar somente uma etapa por entrega e validar antes de avançar. Plano aprovado: `.lovable/plan/atlas-kam-plano-de-implementação-em-7-etapas-2026-11-14.md`.
+Usuário autorizou continuar por todas as etapas, validando cada uma sem esperar aprovação intermediária; parar apenas para decisão crítica ou impedimento externo. Plano aprovado: `.lovable/plan/atlas-kam-plano-de-implementação-em-7-etapas-2026-11-14.md`.
