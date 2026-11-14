@@ -22,6 +22,20 @@
       "when": 1794620656168,
       "tag": "0002_atlas_integrity_guards",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794649177894,
+      "tag": "0003_complete_sla_cycles_and_transitions",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794649607287,
+      "tag": "0004_guard_sla_classification_and_pause_snapshot",
+      "breakpoints": true
     }
   ]
 }

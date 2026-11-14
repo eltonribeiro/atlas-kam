@@ -36,4 +36,5 @@ use the editor.
 - Store protected roles in user_roles, never editable profiles or metadata; grant roles and account allocations only through authorized provisioning, not automatic sign-in.
 - Use shared Atlas brand, navigation, empty-section and authentication components to keep the staged pages consistent.
 - Keep occurrence transitions and business-calendar calculations in PostgreSQL RPCs; server functions authenticate each call and the UI renders available transitions without duplicating gates.
+- Capture resolution deadlines and milestones per SLA cycle in the database; reopening resets only the resolution cycle and preserves first response and past breaches.
 - Use database-backed Node-environment tests for concrete business rules and isolated fictitious auth users for permission checks; never alter a real user's permissions or password for tests.
