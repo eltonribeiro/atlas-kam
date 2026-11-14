@@ -1,6 +1,6 @@
 # Atlas KAM — Entregas
 
-- [ ] Etapa 1 — Base visual, navegação e acesso por e-mail implementados. Testes de páginas públicas, bloqueio sem sessão, erro de credenciais e apresentação em 375px/desktop passaram. Login válido confirmado pelo usuário. Pendências de aceite: saída da conta e recuperação completa por e-mail ainda não confirmadas.
+- [ ] Etapa 1 — Base visual, navegação e acesso por e-mail implementados. Login e saída confirmados pelo usuário; e-mail de recuperação recebido e link aceito nos logs. A troca foi recusada com `same_password` (senha igual à anterior); aviso específico adicionado. Pendente: confirmar troca por uma senha diferente e entrada com a nova senha.
 - [ ] Etapa 2 — Banco, permissões e dados de teste. Depende da validação da etapa 1.
 - [ ] Etapa 3 — SLA e máquina de estados. Depende da validação da etapa 2.
 - [ ] Etapa 4 — Registro de ocorrência. Depende da validação da etapa 3.
