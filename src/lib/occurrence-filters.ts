@@ -12,7 +12,7 @@ export const occurrenceFiltersSchema = z.object({
   category: z.string().uuid().optional().catch(undefined),
   risk: z.boolean().optional().catch(undefined),
   page: z.number().int().min(1).max(10000).optional().catch(undefined),
-  period: z.enum(['7', '30', '90', '365']).optional().catch(undefined),
+  period: z.union([z.literal(7), z.literal(30), z.literal(90), z.literal(365)]).optional().catch(undefined),
 });
 export type OccurrenceFilters = z.infer<typeof occurrenceFiltersSchema>;
 
@@ -21,7 +21,7 @@ export function sanitizeSearch(value: string | undefined) {
 }
 
 export function periodRange(period: OccurrenceFilters['period'], now = new Date()) {
-  const days = Number(period ?? '30');
+  const days = period ?? 30;
   const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
   const end = new Date(`${today}T12:00:00Z`);
   const start = new Date(end.getTime() - (days - 1) * 86400000);

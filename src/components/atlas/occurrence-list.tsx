@@ -14,17 +14,17 @@ import { KpiGrid } from './kpi-grid';
 import { CLOSED, ErrorState, EvaluationSummary, FirstResponseBadge, PageHeading, SeverityBadge, SlaBadge, StateBadge, downloadCsv, formatDateTime, statusLabels, typeLabels } from './occurrence-ui';
 
 const periods = [
-  { value: '7', label: '7 dias' },
-  { value: '30', label: '30 dias' },
-  { value: '90', label: '90 dias' },
-  { value: '365', label: '12 meses' },
+  { value: 7, label: '7 dias' },
+  { value: 30, label: '30 dias' },
+  { value: 90, label: '90 dias' },
+  { value: 365, label: '12 meses' },
 ] as const;
 
 export function OccurrenceDashboard() {
   const search = useSearch({ from: '/_authenticated/ocorrencias/' });
   const navigate = useNavigate({ from: '/ocorrencias/' });
   const { data: catalog } = useSuspenseQuery(catalogOptions);
-  const period = search.period ?? '30';
+  const period = search.period ?? 30;
   const update = (patch: Partial<OccurrenceFilters>, resetPage = true) =>
     navigate({ search: (prev) => ({ ...prev, ...patch, ...(resetPage ? { page: undefined } : {}) }), replace: true });
 
@@ -38,7 +38,7 @@ export function OccurrenceDashboard() {
       />
       <div className="period-chips" role="group" aria-label="Período dos indicadores">
         {periods.map((p) => (
-          <Button key={p.value} variant={period === p.value ? 'default' : 'outline'} size="sm" aria-pressed={period === p.value} onClick={() => update({ period: p.value === '30' ? undefined : p.value }, false)}>{p.label}</Button>
+          <Button key={p.value} variant={period === p.value ? 'default' : 'outline'} size="sm" aria-pressed={period === p.value} onClick={() => update({ period: p.value === 30 ? undefined : p.value }, false)}>{p.label}</Button>
         ))}
         {search.account && <span className="chip-note">Indicadores de {catalog.accounts.find((a) => a.id === search.account)?.name ?? 'conta selecionada'}</span>}
       </div>
@@ -176,7 +176,7 @@ function ExportButton({ search }: { search: OccurrenceFilters }) {
       setBusy(true);
       try {
         const rows = await run({ data: listFilters(search) });
-        downloadCsv(`atlas-ocorrencias-${periodRange('7').to}.csv`,
+        downloadCsv(`atlas-ocorrencias-${periodRange(7).to}.csv`,
           ['Protocolo', 'Conta', 'Assunto', 'Categoria', 'Tipo', 'Severidade', 'Status', 'Responsável', 'Aberta em', '1ª resposta em', 'Prazo da 1ª resposta', 'Prazo de solução', 'Estado do SLA', 'Avaliação'],
           rows.map((o) => [o.protocol, o.account_name, o.subject, o.category_name, typeLabels[o.type ?? ''] ?? o.type, o.severity, statusLabels[o.status ?? ''] ?? o.status, o.assignee_name, formatDateTime(o.created_at), formatDateTime(o.first_response_at), formatDateTime(o.first_response_due_at), formatDateTime(o.resolution_due_at),
             ({ ok: 'No prazo', risk: 'Em risco', breached: 'Violado', paused: 'Pausado', stopped: 'Parado' } as Record<string, string>)[o.sla_state ?? ''] ?? '',
