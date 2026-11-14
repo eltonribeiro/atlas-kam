@@ -1,6 +1,6 @@
 # Atlas KAM — Entregas
 
-- [ ] Entrega atual — Implementar e testar anexos privados e avaliação pública por token, incluindo isolamento de acesso e respostas do cliente.
+- [ ] Entrega atual — Anexos privados no detalhe e avaliação pública por token implementados. 27 testes desta entrega passaram: isolamento de arquivos, limite 10/15 MB, resposta única, CSAT/CES, expiração, reabertura e limite de acesso. Verificação ponta a ponta bloqueada: arquivos JavaScript da prévia permanecem pendentes, mesmo em navegador novo e após recuperação do servidor. Não considerar entrega pronta para produção. Pendentes: anexos no registro/ações, convite recuperável após falha de envio, lembretes/encerramento tácito e contestação pública.
 
 - [x] Etapa 1 — Base visual, navegação e acesso por e-mail. Login, saída e recuperação confirmados pelo usuário.
 - [x] Etapa 2 — Estrutura e dados fictícios gravados: 19 tabelas com RLS (17 previstas + cargos e contador de protocolos), quatro contas, oito contatos, sete categorias e quatro usuários fictícios. Testes por perfil, impedimento de elevação, matriz de severidade, vínculo de contato e histórico imutável passaram. Usuário real preservado sem cargo/alocação automática.

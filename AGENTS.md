@@ -40,3 +40,5 @@ use the editor.
 - Keep customer contestations separate from SLA state; server-only submission and role-checked transactional review prevent automatic or unauthorized reopening.
 - Use database-backed Node-environment tests for concrete business rules and isolated fictitious auth users for permission checks; never alter a real user's permissions or password for tests.
 - Send app emails only from feature-specific server handlers through the managed template helper; managed delivery owns retries and suppression, so no email queues or generic send endpoints are created.
+- Keep customer evaluation writes in a token-validated, row-locked database operation; public handlers project only the customer summary and persist rate limits without exposing token hashes.
+- Store evidence in a private bucket with account-scoped object policies; validate upload size and format server-side and enforce attachment counts under an occurrence row lock.
