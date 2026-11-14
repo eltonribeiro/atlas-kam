@@ -25,7 +25,7 @@ async function occurrence(contactId: string, categoryId: string, createdAt: stri
 
 async function evaluation(occurrenceId: string, sentAt: string, answer?: { at: string; resolved: 'yes' | 'partial' | 'no'; csat: number; ces: number }) {
   const hash = (crypto.randomUUID() + crypto.randomUUID()).replaceAll('-', '');
-  const r = await admin.from('evaluations').insert({ occurrence_id: occurrenceId, cycle: 1, token_hash: hash, token_expires_at: at(`${day(19)}T00:00:00`), sent_at: sentAt, ...(answer ? { answered_at: answer.at, resolved: answer.resolved, csat: answer.csat, ces: answer.ces, missing_text: answer.resolved === 'yes' ? null : 'Pendência fictícia' } : {}) });
+  const r = await admin.from('evaluations').insert({ occurrence_id: occurrenceId, cycle: 1, token_hash: hash, token_expires_at: at(`${day(19)}T00:00:00`), sent_at: sentAt, invite_sent_at: sentAt, ...(answer ? { answered_at: answer.at, resolved: answer.resolved, csat: answer.csat, ces: answer.ces, missing_text: answer.resolved === 'yes' ? null : 'Pendência fictícia' } : {}) });
   expect(r.error).toBeNull();
 }
 

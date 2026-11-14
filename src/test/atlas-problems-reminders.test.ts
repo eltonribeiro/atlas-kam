@@ -106,7 +106,7 @@ describe('Problems and evaluation reminders', () => {
     const hash = crypto.randomUUID().replaceAll('-', '') + crypto.randomUUID().replaceAll('-', '');
     // Eight calendar days always spans at least five business days of the weekday calendar.
     const sentAt = new Date(Date.now() - 8 * 86400000).toISOString();
-    const evaluation = await admin.from('evaluations').insert({ occurrence_id: id, cycle: 1, token_hash: hash, token_expires_at: new Date(Date.now() + 86400000).toISOString(), sent_at: sentAt }).select('id').single();
+    const evaluation = await admin.from('evaluations').insert({ occurrence_id: id, cycle: 1, token_hash: hash, token_expires_at: new Date(Date.now() + 86400000).toISOString(), sent_at: sentAt, invite_sent_at: sentAt }).select('id').single();
     expect(evaluation.error).toBeNull();
     const state = async () => ({
       reminders: (await admin.from('evaluations').select('reminders_sent').eq('id', evaluation.data?.id).single()).data?.reminders_sent,
@@ -125,9 +125,33 @@ describe('Problems and evaluation reminders', () => {
   it('does not remind before two business days', async () => {
     const id = await occurrence(kam, 'solution_proposed');
     const hash = crypto.randomUUID().replaceAll('-', '') + crypto.randomUUID().replaceAll('-', '');
-    const evaluation = await admin.from('evaluations').insert({ occurrence_id: id, cycle: 1, token_hash: hash, token_expires_at: new Date(Date.now() + 86400000).toISOString(), sent_at: new Date(Date.now() - 60000).toISOString() }).select('id').single();
+    const evaluation = await admin.from('evaluations').insert({ occurrence_id: id, cycle: 1, token_hash: hash, token_expires_at: new Date(Date.now() + 86400000).toISOString(), sent_at: new Date(Date.now() - 60000).toISOString(), invite_sent_at: new Date(Date.now() - 60000).toISOString() }).select('id').single();
     expect(evaluation.error).toBeNull();
     expect((await admin.rpc('sla_tick')).error).toBeNull();
     expect((await admin.from('evaluations').select('reminders_sent').eq('id', evaluation.data?.id).single()).data?.reminders_sent).toBe(0);
+  }, 30000);
+  it('never reminds or closes while the invitation was not delivered to the customer', async () => {
+    const id = await occurrence(kam, 'solution_proposed');
+    const hash = crypto.randomUUID().replaceAll('-', '') + crypto.randomUUID().replaceAll('-', '');
+    const issuedAt = new Date(Date.now() - 10 * 86400000).toISOString();
+    const evaluation = await admin.from('evaluations').insert({ occurrence_id: id, cycle: 1, token_hash: hash, token_expires_at: new Date(Date.now() + 86400000).toISOString(), sent_at: issuedAt }).select('id').single();
+    expect(evaluation.error).toBeNull();
+    for (let i = 0; i < 3; i++) expect((await admin.rpc('sla_tick')).error).toBeNull();
+    expect((await admin.from('evaluations').select('reminders_sent').eq('id', evaluation.data?.id).single()).data?.reminders_sent).toBe(0);
+    expect((await admin.from('occurrences').select('status').eq('id', id).single()).data?.status).toBe('solution_proposed');
+  }, 30000);
+
+  it('keeps an e-mail waiting without spending an attempt while sending is unavailable', async () => {
+    const id = await occurrence(kam);
+    const claimed = await admin.rpc('claim_email_dispatches', { p_occurrence_id: id, p_limit: 5 });
+    expect(claimed.error).toBeNull();
+    const row = (claimed.data as { id: string; attempts: number }[])[0];
+    expect(row?.attempts).toBe(1);
+    expect((await admin.rpc('complete_email_dispatch', { p_id: row?.id, p_outcome: 'deferred', p_error: 'domínio de envio ainda em verificação' })).error).toBeNull();
+    const after = await admin.from('email_dispatches').select('status,attempts,next_attempt_at').eq('id', row?.id).single();
+    expect(after.data).toMatchObject({ status: 'retry', attempts: 0 });
+    expect(new Date(String(after.data?.next_attempt_at)).getTime()).toBeGreaterThan(Date.now() + 14 * 60000);
+    const again = await admin.rpc('claim_email_dispatches', { p_occurrence_id: id, p_limit: 5 });
+    expect((again.data as unknown[]).length).toBe(0);
   }, 30000);
 });
