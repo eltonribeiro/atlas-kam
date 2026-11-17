@@ -110,7 +110,12 @@ export function PageHeading({ eyebrow, title, subtitle, actions }: { eyebrow: st
 }
 
 export function downloadCsv(filename: string, header: string[], rows: (string | number | null | undefined)[][]) {
-  const quote = (v: unknown) => `"${String(v ?? '').replaceAll('"', '""')}"`;
+  // Neutralize spreadsheet formula injection: text starting with = + - @ tab or CR gets a leading apostrophe.
+  const quote = (v: unknown) => {
+    let text = String(v ?? '');
+    if (typeof v !== 'number' && /^[=+\-@\t\r]/.test(text)) text = `'${text}`;
+    return `"${text.replaceAll('"', '""')}"`;
+  };
   const csv = '\uFEFF' + [header, ...rows].map((r) => r.map(quote).join(';')).join('\r\n');
   const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
   const a = document.createElement('a');
