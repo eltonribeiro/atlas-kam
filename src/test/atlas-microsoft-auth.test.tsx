@@ -41,4 +41,12 @@ describe('Microsoft sign-in', () => {
     expect(mocks.navigate).not.toHaveBeenCalled();
     expect(screen.getByRole('button', { name: 'Entrar com Microsoft' })).toBeEnabled();
   });
+
+  it('rejects an OAuth result without a verified session', async () => {
+    mocks.oauth.mockResolvedValue({ redirected: false });
+    render(<AuthForm />);
+    fireEvent.click(screen.getByRole('button', { name: 'Entrar com Microsoft' }));
+    await screen.findByRole('alert');
+    expect(mocks.navigate).not.toHaveBeenCalled();
+  });
 });

@@ -3,10 +3,19 @@ import { createRouter, rootRouteId } from "@tanstack/react-router";
 import { describe, expect, it } from "vitest";
 
 import { routeTree } from "@/routeTree.gen";
+import { Route as recoveryRoute } from '@/routes/reset-password';
 
 // Match routes without running loaders or rendering: loaders may need a server or
 // network the test run lacks, and jsdom never loads the stylesheets React waits on.
 describe("App routing", () => {
+  it('redirects retired password recovery to Microsoft sign-in', () => {
+    try {
+      recoveryRoute.options.beforeLoad?.({} as never);
+      throw new Error('Expected redirect');
+    } catch (error) {
+      expect(error).toMatchObject({ options: { to: '/auth', replace: true } });
+    }
+  });
   it("matches a page for / instead of falling back to not found", () => {
     const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
 

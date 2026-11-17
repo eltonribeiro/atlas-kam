@@ -1,4 +1,3 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { atlasHead } from '@/lib/atlas-head';
-import { AuthForm } from '@/components/atlas/auth-form';
-export const Route = createFileRoute('/reset-password')({ head: () => atlasHead('Redefinir senha', 'Recuperação de acesso ao Atlas KAM.'), component: () => <AuthForm recovery /> });
+export const Route = createFileRoute('/reset-password')({ head: () => atlasHead('Acesso Microsoft', 'Acesso ao Atlas KAM pela Microsoft.'), beforeLoad: () => { throw redirect({ to: '/auth', replace: true }); } });
