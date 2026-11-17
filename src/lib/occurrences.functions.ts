@@ -121,17 +121,17 @@ export const previewSla = createServerFn()
   });
 
 export const occurrenceSchema = z.object({
-  account_id: z.string({ required_error: 'Selecione a conta.' }).uuid('Selecione a conta.'),
-  contact_id: z.string({ required_error: 'Selecione o contato.' }).uuid('Selecione o contato cadastrado.'),
-  channel: z.enum(['portal', 'email', 'phone', 'whatsapp', 'account_meeting', 'site_visit'], { errorMap: () => ({ message: 'Selecione o canal.' }) }),
+  account_id: z.string({ error: 'Selecione a conta.' }).uuid('Selecione a conta.'),
+  contact_id: z.string({ error: 'Selecione o contato.' }).uuid('Selecione o contato cadastrado.'),
+  channel: z.enum(['portal', 'email', 'phone', 'whatsapp', 'account_meeting', 'site_visit'], { error: 'Selecione o canal.' }),
   type: z.enum(['complaint', 'incident', 'request']),
-  category_id: z.string({ required_error: 'Selecione a categoria.' }).uuid('Selecione a categoria.'),
+  category_id: z.string({ error: 'Selecione a categoria.' }).uuid('Selecione a categoria.'),
   subcategory_id: z.string().uuid().nullable().optional(),
   subject: z.string().trim().min(5, 'O assunto precisa de pelo menos 5 caracteres.').max(140, 'O assunto pode ter até 140 caracteres.'),
   description: z.string().trim().min(1, 'Descreva o relato do cliente.').max(8000, 'Relato muito longo.'),
   customer_expectation: z.string().trim().min(1, 'Informe o que o cliente espera como solução.').max(4000, 'Texto muito longo.'),
   references_text: z.string().trim().max(500, 'Referências muito longas.').optional(),
-  financial_impact: z.number({ invalid_type_error: 'Informe um valor numérico.' }).min(0, 'O impacto financeiro não pode ser negativo.').max(999999999999, 'Valor muito alto.').nullable(),
+  financial_impact: z.number({ error: 'Informe um valor numérico.' }).min(0, 'O impacto financeiro não pode ser negativo.').max(999999999999, 'Valor muito alto.').nullable(),
   occurred_at: z.string().nullable().refine((v) => !v || new Date(v).getTime() <= Date.now() + 60000, 'A data da ocorrência não pode ser futura.'),
   impact: level,
   urgency: level,
