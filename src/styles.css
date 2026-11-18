@@ -30,7 +30,8 @@
  */
 
 @theme inline {
-  --font-sans: "IBM Plex Sans", sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --font-heading: "Archivo", sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
   --color-ink: var(--ink);
   --color-nav-foreground: var(--nav-foreground);
@@ -77,25 +78,25 @@
 }
 
 :root {
-  --radius: 0.375rem;
-  --background: oklch(0.972 0.003 250);
-  --foreground: oklch(0.208 0.017 260);
+  --radius: 0.625rem;
+  --background: oklch(0.970 0.003 0);
+  --foreground: oklch(0.272 0.014 261.7);
   --card: oklch(1 0 0); --card-foreground: var(--foreground);
   --popover: var(--card); --popover-foreground: var(--foreground);
-  --primary: oklch(0.488 0.217 264.4); --primary-foreground: oklch(1 0 0);
+  --primary: oklch(0.585 0.223 29.1); --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.956 0.007 260); --secondary-foreground: var(--foreground);
-  --muted: oklch(0.956 0.007 260); --muted-foreground: oklch(0.44 0.026 260);
-  --accent: oklch(0.945 0.023 265); --accent-foreground: var(--primary);
+  --muted: oklch(0.956 0.007 260); --muted-foreground: oklch(0.494 0.025 261.7);
+  --accent: oklch(0.952 0.021 21.2); --accent-foreground: var(--ink);
   --destructive: oklch(0.45 0.172 8); --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.9 0.011 255); --input: var(--border); --ring: var(--primary);
+  --border: oklch(0.927 0.007 260.7); --input: oklch(0.859 0.014 258.3); --ring: var(--primary);
   --ink: var(--foreground); --nav-foreground: oklch(0.91 0.008 255);
   --ok-bg: oklch(0.96 0.022 150); --ok-fg: oklch(0.45 0.105 150);
   --risk-bg: oklch(0.967 0.027 80); --risk-fg: oklch(0.46 0.1 60);
   --breach-bg: var(--destructive); --breach-fg: var(--primary-foreground);
-  --pause-bg: var(--secondary); --pause-fg: var(--muted-foreground);
+  --pause-bg: var(--secondary); --pause-fg: oklch(0.44 0.026 260);
   --internal-bg: oklch(0.98 0.012 70);
-  --chart-1: var(--primary); --chart-2: var(--ok-fg); --chart-3: var(--risk-fg); --chart-4: var(--destructive); --chart-5: var(--muted-foreground);
-  --sidebar: var(--card); --sidebar-foreground: var(--foreground); --sidebar-primary: var(--primary); --sidebar-primary-foreground: var(--primary-foreground); --sidebar-accent: var(--accent); --sidebar-accent-foreground: var(--accent-foreground); --sidebar-border: var(--border); --sidebar-ring: var(--ring);
+  --chart-1: oklch(0.488 0.217 264.4); --chart-2: var(--ok-fg); --chart-3: var(--risk-fg); --chart-4: var(--destructive); --chart-5: oklch(0.44 0.026 260);
+  --sidebar: oklch(0.272 0.014 261.7); --sidebar-foreground: oklch(0.710 0.022 261.7); --sidebar-primary: var(--primary); --sidebar-primary-foreground: var(--primary-foreground); --sidebar-accent: oklch(0.585 0.223 29.1 / 0.18); --sidebar-accent-foreground: oklch(1 0 0); --sidebar-border: var(--border); --sidebar-ring: var(--ring);
   --panel-shadow: 0 3px 12px oklch(0.208 0.017 260 / 0.04);
 }
 
@@ -112,6 +113,7 @@
 
 body { margin: 0; font-family: var(--font-sans); font-size: 14px; letter-spacing: 0; }
 h1, h2, p { margin: 0; } h1 { font-size: 28px; font-weight: 600; line-height: 1.25; } h2 { font-size: 20px; font-weight: 600; }
+h1 { font-family: var(--font-heading); font-size: 22px; font-weight: 700; }
 .atlas-brand { display: flex; align-items: center; gap: 14px; white-space: nowrap; }
 .atlas-brand strong { font-size: 21px; font-weight: 600; } .atlas-brand > span:last-child { font-size: 12px; }
 .atlas-mark { display: flex; align-items: center; justify-content: center; color: var(--primary-foreground); }
@@ -187,7 +189,7 @@ h1, h2, p { margin: 0; } h1 { font-size: 28px; font-weight: 600; line-height: 1.
 .kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;}
 .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:6px;min-height:178px;box-shadow:var(--panel-shadow);}
 .kpi-label{font-size:12px;color:var(--muted-foreground);font-weight:500;}
-.kpi-value{font-size:28px;font-weight:500;line-height:1.15;}
+.kpi-value.font-mono{font-family:var(--font-heading);font-size:26px;font-weight:500;line-height:1.15;}
 .kpi-delta{font-size:12px;color:var(--muted-foreground);}.delta-better{color:var(--ok-fg);}.delta-worse{color:var(--destructive);}
 .kpi-extra{font-size:12px;}
 .kpi-warning{display:flex;gap:6px;align-items:flex-start;font-size:11px;color:var(--risk-fg);background:var(--risk-bg);padding:6px 8px;border-radius:4px;line-height:1.4;}
