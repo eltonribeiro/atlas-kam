@@ -115,10 +115,13 @@ body { margin: 0; font-family: var(--font-sans); font-size: 14px; letter-spacing
 h1, h2, p { margin: 0; } h1 { font-size: 28px; font-weight: 600; line-height: 1.25; } h2 { font-size: 20px; font-weight: 600; }
 h1 { font-family: var(--font-heading); font-size: 22px; font-weight: 700; }
 .atlas-brand { display: flex; align-items: center; gap: 14px; white-space: nowrap; }
+.atlas-logo { display: block; width: auto; height: 28px; flex-shrink: 0; }
+.atlas-logo-login { height: 48px; }
 .atlas-brand strong { font-size: 21px; font-weight: 600; } .atlas-brand > span:last-child { font-size: 12px; }
 .atlas-mark { display: flex; align-items: center; justify-content: center; color: var(--primary-foreground); }
 .brand-divider { height: 20px; width: 1px; background: var(--muted-foreground); }
-.auth-header, .atlas-header { background: var(--ink); color: var(--nav-foreground); }
+.atlas-header { background: var(--ink); color: var(--nav-foreground); }
+.auth-header { background: var(--card); color: var(--foreground); }
 .auth-header { min-height: 76px; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; }
 .auth-access { display: flex; align-items: center; gap: 8px; font-size: 12px; }
 .auth-page { min-height: 100svh; display: flex; flex-direction: column; }

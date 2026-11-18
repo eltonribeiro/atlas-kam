@@ -5,7 +5,7 @@ import { Brand } from './brand';
 export function PublicShell({ children }: { children: ReactNode }) {
   return (
     <div className="auth-page public-page">
-      <header className="auth-header"><Brand portal /><span className="auth-access"><ShieldCheck size={14} /> Link seguro e pessoal</span></header>
+      <header className="auth-header"><Brand portal tone="light" /><span className="auth-access"><ShieldCheck size={14} /> Link seguro e pessoal</span></header>
       <main className="public-main">{children}</main>
       <footer className="auth-footer"><span>ATLAS · Key Account Manager</span><span>Não encaminhe este link: ele dá acesso à sua ocorrência.</span></footer>
     </div>

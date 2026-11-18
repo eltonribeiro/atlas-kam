@@ -37,7 +37,7 @@ export function AuthForm() {
     } finally { setBusy(false); }
   }
   return <div className="auth-page">
-    <header className="auth-header"><Brand /><span className="auth-access"><LockKeyhole size={14} /> Acesso interno</span></header>
+    <header className="auth-header"><Brand tone="light" login /><span className="auth-access"><LockKeyhole size={14} /> Acesso interno</span></header>
     <main className="auth-main">
       <div className="auth-intro"><p className="eyebrow">GESTÃO DE CONTAS-CHAVE</p><h1>Atlas KAM</h1><p>Módulo de ocorrências</p></div>
       <section className="auth-panel">

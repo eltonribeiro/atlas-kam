@@ -89,12 +89,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Atlas KAM" },
       { name: "description", content: "Gestão de ocorrências de contas-chave." },
-      { name: "author", content: "Lovable" },
       { property: "og:title", content: "Atlas KAM" },
       { property: "og:description", content: "Gestão de ocorrências de contas-chave." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
