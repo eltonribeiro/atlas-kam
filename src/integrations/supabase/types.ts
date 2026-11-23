@@ -1314,16 +1314,19 @@ export type Database = {
           active: boolean
           full_name: string
           id: string
+          oid: string | null
         }
         Insert: {
           active?: boolean
           full_name: string
           id: string
+          oid?: string | null
         }
         Update: {
           active?: boolean
           full_name?: string
           id?: string
+          oid?: string | null
         }
         Relationships: []
       }
