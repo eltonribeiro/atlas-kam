@@ -12,6 +12,7 @@
 - [x] Testes: 73 automatizados aprovados; fluxos completos verificados no navegador em desktop e 375px; dados e identidades de teste desativados após uso.
 
 ## Aguardando algo externo
+- Integração SIGA (skill siga-integracao): aguarda confirmação do ambiente, pré-requisitos Entra/BFF/PAP/SIGA e valores públicos da configuração; não alterar papéis existentes nem ativar observe/enforce antes das confirmações exigidas.
 - Envio real de e-mails: aguarda a verificação DNS de notify.intralog.log.br.
 - Publicação do app: a rotina agendada e os links dos e-mails usam o endereço publicado; só passam a funcionar depois de publicar.
 - Convite de novos usuários por e-mail: implementado, não testado com endereço real (envia e-mail de verdade).
