@@ -1,5 +1,8 @@
 # Atlas KAM — Entregas
 
+## Correção de renovação SIGA
+- [x] Preservar decisão e formulário durante a renovação; fechar após falha. Regressão reproduzida antes da correção; 110 testes sem banco e compilação automática aprovados. tsc separado não executado; nenhum Secret, modo ou dado alterado.
+
 ## Concluído
 - [x] Etapa 1 — Base visual, navegação e acesso por e-mail (login, saída e recuperação confirmados por Elton).
 - [x] Etapa 2 — Estrutura de dados, permissões por perfil/conta e dados fictícios.

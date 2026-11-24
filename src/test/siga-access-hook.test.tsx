@@ -9,7 +9,7 @@ import { useSigaAccess } from '@/components/atlas/use-siga-access';
 
 describe('renovação de acesso no navegador', () => {
   afterEach(() => vi.resetAllMocks());
-  it('não reaproveita autorização anterior durante a consulta nem depois de falha', async () => {
+  it('mantém a decisão anterior durante a renovação e fecha depois de falha', async () => {
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
     m.read.mockResolvedValueOnce({ status: 'ok', granted: ['atlas-kam.contas_consultar'] });
@@ -19,7 +19,8 @@ describe('renovação de acesso no navegador', () => {
     m.read.mockImplementation(() => new Promise((_resolve, reject) => { fail = reject; }));
     let refreshing: Promise<unknown> | undefined;
     act(() => { refreshing = hook.result.current.refetch(); });
-    await waitFor(() => expect(hook.result.current.data).toBeUndefined());
+    await waitFor(() => expect(hook.result.current.isFetching).toBe(true));
+    expect(hook.result.current.data).toEqual({ status: 'ok', granted: ['atlas-kam.contas_consultar'] });
     // Desabilita retry para conferir a falha sem consumir tempo ou fazer rede.
     client.setQueryDefaults(['siga-access'], { retry: false });
     if (!fail) throw new Error('Expected pending access request');
