@@ -16,7 +16,17 @@ export const Route = createFileRoute('/api/public/jobs/atlas-tick')({
         }
         const { processDispatches } = await import('@/lib/notifications.server');
         const emails = await processDispatches({ limit: 50, origin: new URL(request.url).origin });
-        return Response.json({ ok: true, emails });
+        let siga: { status: string; mode?: string; evaluated?: number; divergent?: number; noOid?: number; errors?: number; writesDisabled?: boolean } = { status: 'error' };
+        try {
+          const { runScheduledSigaSync } = await import('@/lib/siga-sync.server');
+          const result = await runScheduledSigaSync();
+          siga = 'evaluated' in result
+            ? { status: result.status, mode: result.mode, evaluated: result.evaluated, divergent: result.divergent.length, noOid: result.noOid, errors: result.errors, writesDisabled: result.writesDisabled }
+            : { status: result.status };
+        } catch {
+          console.error('[SIGA] sincronização falhou:', 'unknown');
+        }
+        return Response.json({ ok: true, emails, siga });
       },
     },
   },

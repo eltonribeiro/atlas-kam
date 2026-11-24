@@ -10,9 +10,12 @@
 - [x] Etapa 7 — Painel com 8 KPIs conferidos contra cálculo manual, filtros na URL, Pareto, aging e exportação; Problemas com eficácia mensurável e reprovação automática; Contratos e SLA; Contas/equipe/anonimização; relatório por conta.
 - [x] Rotina a cada 5 minutos agendada (prazos, alertas, lembretes e envios); e-mails aguardam sem gastar tentativas enquanto o domínio não estiver liberado.
 - [x] Testes: 73 automatizados aprovados; fluxos completos verificados no navegador em desktop e 375px; dados e identidades de teste desativados após uso.
+- [x] SIGA fase 2b: API por oid servidor, perfis do manifesto, comparação sem gravação, diagnóstico e gancho isolado na rotina existente.
+- [x] SIGA fase 3a: mapa completo de telas, prioridade da nova ocorrência, AccessGate fechado em dúvida, exceção Administração, filtro do menu e renovação a cada minuto.
+- [x] Validação SIGA: 108 testes sem banco aprovados; compilação automática aprovada; 117 arquivos do navegador sem credenciais/API/access-mode; Administração conferida com sessão real em desktop e 375px, diagnóstico off e sem erros. tsc separado não executado. Fase 1 e migration oid preservadas; nenhuma alteração de Secrets, interruptores, papéis ou dados.
 
 ## Aguardando algo externo
-- Integração SIGA (skill siga-integracao): fase 1 implementada; 39 testes sem banco aprovados, compilação aprovada e Administração conferida com sessão real em desktop/375px. Conexão PAP bloqueada neste ambiente por ERR_NAME_NOT_RESOLVED no endereço QA; aguarda confirmação do usuário no navegador antes da fase 2b. Secrets já cadastrados, sem sobrescrita; confirmar modo off e manifesto/mapeamento antes da sincronização. Não alterar papéis existentes nem ativar observe/enforce.
+- SIGA em QA: usuário valida manifesto/perfis, ativa observe e confere diagnóstico/log sem divergências inesperadas; confirma oid/perfil de todos os ativos antes de ativar SIGA_ACCESS_MODE=enforce e publicar. Validar retirada de permissão em até dois minutos e falha fechada pelo navegador na VPN. A fase 3a controla a interface, não muda a autorização dos dados; fase 3b não implementada.
 - Envio real de e-mails: aguarda a verificação DNS de notify.intralog.log.br.
 - Publicação do app: a rotina agendada e os links dos e-mails usam o endereço publicado; só passam a funcionar depois de publicar.
 - Convite de novos usuários por e-mail: implementado, não testado com endereço real (envia e-mail de verdade).

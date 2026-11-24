@@ -6,6 +6,7 @@ import { getSigaPapConfig } from '@/lib/siga-pap-config.functions';
 import { isFictitiousEmail } from '@/lib/siga-config';
 import { PageHeading } from '@/components/atlas/occurrence-ui';
 import { SigaPapFrame } from '@/components/atlas/siga-pap-frame';
+import { SigaPermissionsCheck } from '@/components/atlas/siga-permissions-check';
 
 const administrationOptions = queryOptions({
   queryKey: ['siga-administration'],
@@ -28,7 +29,7 @@ function AdministrationPage() {
   return <main className="atlas-main">
     <PageHeading eyebrow="ADMINISTRAÇÃO" title="Permissões de acesso" subtitle="Atlas KAM · SIGA" />
     {data.config
-      ? <SigaPapFrame config={data.config} email={data.email || data.config.loginHint || undefined} />
+      ? <><SigaPapFrame config={data.config} email={data.email || data.config.loginHint || undefined} /><SigaPermissionsCheck /></>
       : <div className="data-message"><h2>Administração indisponível</h2><p>A integração não está configurada ou sua conta não possui acesso de administrador.</p></div>}
   </main>;
 }
