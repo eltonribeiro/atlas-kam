@@ -12,7 +12,7 @@
 - [x] Testes: 73 automatizados aprovados; fluxos completos verificados no navegador em desktop e 375px; dados e identidades de teste desativados após uso.
 
 ## Aguardando algo externo
-- Integração SIGA (skill siga-integracao): aguarda confirmação do ambiente, pré-requisitos Entra/BFF/PAP/SIGA e valores públicos da configuração; não alterar papéis existentes nem ativar observe/enforce antes das confirmações exigidas.
+- Integração SIGA (skill siga-integracao): fase 1 implementada; 39 testes sem banco aprovados, compilação aprovada e Administração conferida com sessão real em desktop/375px. Conexão PAP bloqueada neste ambiente por ERR_NAME_NOT_RESOLVED no endereço QA; aguarda confirmação do usuário no navegador antes da fase 2b. Secrets já cadastrados, sem sobrescrita; confirmar modo off e manifesto/mapeamento antes da sincronização. Não alterar papéis existentes nem ativar observe/enforce.
 - Envio real de e-mails: aguarda a verificação DNS de notify.intralog.log.br.
 - Publicação do app: a rotina agendada e os links dos e-mails usam o endereço publicado; só passam a funcionar depois de publicar.
 - Convite de novos usuários por e-mail: implementado, não testado com endereço real (envia e-mail de verdade).

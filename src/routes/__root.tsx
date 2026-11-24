@@ -15,6 +15,7 @@ import { Navigation } from "@/components/atlas/navigation";
 import { useLocation } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
+import { clearSigaSession } from '@/lib/siga-msal';
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -129,7 +130,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   const pathname = useLocation({ select: location => location.pathname });
-  const publicPage = pathname === '/auth' || pathname === '/reset-password' || pathname.startsWith('/avaliacao/') || pathname.startsWith('/contestacao/');
+  const publicPage = pathname === '/auth' || pathname === '/reset-password' || pathname === '/msal-redirect' || pathname.startsWith('/avaliacao/') || pathname.startsWith('/contestacao/');
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange(event => {
       if (event !== 'SIGNED_IN' && event !== 'SIGNED_OUT' && event !== 'USER_UPDATED') return;
@@ -138,7 +139,7 @@ function RootComponent() {
         void router.navigate({ to: '/ocorrencias', replace: true });
       }
       if (event !== 'SIGNED_OUT') void queryClient.invalidateQueries();
-      else queryClient.clear();
+      else { clearSigaSession(); queryClient.clear(); }
     });
     return () => data.subscription.unsubscribe();
   }, [router, queryClient]);

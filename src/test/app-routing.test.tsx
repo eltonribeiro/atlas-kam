@@ -24,12 +24,12 @@ describe("App routing", () => {
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
 
-  it.each(['/ocorrencias', '/ocorrencias/nova', '/ocorrencias/123', '/problemas', '/problemas/123', '/config/sla', '/contas', '/relatorios'])('keeps %s inside the authenticated layout', (path) => {
+  it.each(['/ocorrencias', '/ocorrencias/nova', '/ocorrencias/123', '/problemas', '/problemas/123', '/config/sla', '/contas', '/relatorios', '/administracao'])('keeps %s inside the authenticated layout', (path) => {
     const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
     expect(router.matchRoutes(path).map(match => match.routeId)).toContain('/_authenticated');
   });
 
-  it.each(['/auth', '/reset-password', '/avaliacao/token'])('keeps %s outside the authenticated layout', (path) => {
+  it.each(['/auth', '/reset-password', '/avaliacao/token', '/msal-redirect'])('keeps %s outside the authenticated layout', (path) => {
     const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
     const matches = router.matchRoutes(path);
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);

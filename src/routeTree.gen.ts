@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as MsalRedirectRouteImport } from './routes/msal-redirect'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedAdministracaoRouteImport } from './routes/_authenticated/administracao'
 import { Route as AuthenticatedContasRouteImport } from './routes/_authenticated/contas'
 import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated/relatorios'
 import { Route as AvaliacaoTokenRouteImport } from './routes/avaliacao.$token'
@@ -40,11 +42,22 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MsalRedirectRoute = MsalRedirectRouteImport.update({
+  id: '/msal-redirect',
+  path: '/msal-redirect',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdministracaoRoute =
+  AuthenticatedAdministracaoRouteImport.update({
+    id: '/administracao',
+    path: '/administracao',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedContasRoute = AuthenticatedContasRouteImport.update({
   id: '/contas',
   path: '/contas',
@@ -115,7 +128,9 @@ const LovableEmailTransactionalPreviewRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/msal-redirect': typeof MsalRedirectRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/administracao': typeof AuthenticatedAdministracaoRoute
   '/contas': typeof AuthenticatedContasRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/avaliacao/$token': typeof AvaliacaoTokenRoute
@@ -132,7 +147,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/msal-redirect': typeof MsalRedirectRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/administracao': typeof AuthenticatedAdministracaoRoute
   '/contas': typeof AuthenticatedContasRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/avaliacao/$token': typeof AvaliacaoTokenRoute
@@ -151,7 +168,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/msal-redirect': typeof MsalRedirectRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/administracao': typeof AuthenticatedAdministracaoRoute
   '/_authenticated/contas': typeof AuthenticatedContasRoute
   '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
   '/avaliacao/$token': typeof AvaliacaoTokenRoute
@@ -170,7 +189,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/msal-redirect'
     | '/reset-password'
+    | '/administracao'
     | '/contas'
     | '/relatorios'
     | '/avaliacao/$token'
@@ -187,7 +208,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/msal-redirect'
     | '/reset-password'
+    | '/administracao'
     | '/contas'
     | '/relatorios'
     | '/avaliacao/$token'
@@ -205,7 +228,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/msal-redirect'
     | '/reset-password'
+    | '/_authenticated/administracao'
     | '/_authenticated/contas'
     | '/_authenticated/relatorios'
     | '/avaliacao/$token'
@@ -224,6 +249,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  MsalRedirectRoute: typeof MsalRedirectRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   AvaliacaoTokenRoute: typeof AvaliacaoTokenRoute
   ContestacaoTokenRoute: typeof ContestacaoTokenRoute
@@ -254,12 +280,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/msal-redirect': {
+      id: '/msal-redirect'
+      path: '/msal-redirect'
+      fullPath: '/msal-redirect'
+      preLoaderRoute: typeof MsalRedirectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/administracao': {
+      id: '/_authenticated/administracao'
+      path: '/administracao'
+      fullPath: '/administracao'
+      preLoaderRoute: typeof AuthenticatedAdministracaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/contas': {
       id: '/_authenticated/contas'
@@ -349,6 +389,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdministracaoRoute: typeof AuthenticatedAdministracaoRoute
   AuthenticatedContasRoute: typeof AuthenticatedContasRoute
   AuthenticatedRelatoriosRoute: typeof AuthenticatedRelatoriosRoute
   AuthenticatedConfigSlaRoute: typeof AuthenticatedConfigSlaRoute
@@ -360,6 +401,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdministracaoRoute: AuthenticatedAdministracaoRoute,
   AuthenticatedContasRoute: AuthenticatedContasRoute,
   AuthenticatedRelatoriosRoute: AuthenticatedRelatoriosRoute,
   AuthenticatedConfigSlaRoute: AuthenticatedConfigSlaRoute,
@@ -377,6 +419,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  MsalRedirectRoute: MsalRedirectRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   AvaliacaoTokenRoute: AvaliacaoTokenRoute,
   ContestacaoTokenRoute: ContestacaoTokenRoute,
